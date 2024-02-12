@@ -1,0 +1,111 @@
+/* Resetare stilizare implicită */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Stilizare globală */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+}
+
+/* Stilizare antet */
+header {
+    background-color: white;
+    color: black;
+    padding: 10px 0;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Umbra pentru antet */
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+
+.logo img {
+    height: 40px;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    margin-left: auto; /* Adu user profile în dreapta */
+}
+
+.user-profile img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.3); /* Umbra pentru imaginea de profil */
+}
+
+ul {
+    list-style: none;
+    display: flex;
+    margin-left: auto; /* Adu butoanele în dreapta */
+    align-items: center; /* Aliniază vertical butoanele și profilul utilizatorului */
+}
+
+li {
+    margin-right: 20px;
+}
+
+li:last-child {
+    margin-right: 0;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+}
+
+/* Stilizare secțiuni principale */
+main {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Umbra pentru secțiunea principală */
+}
+
+h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+/* Stilizare subsol */
+footer {
+    background-color: white;
+    color: black;
+    text-align: center;
+    padding: 10px 0;
+    box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.1); /* Umbra pentru subsol */
+}
+
+.footer-links a {
+    color: black;
+    text-decoration: none;
+    margin-right: 10px;
+}
+
+.footer-links a:last-child {
+    margin-right: 0;
+}
+.nav-center {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+}
+
+.nav-center:last-child {
+    margin-right: 0;
+}

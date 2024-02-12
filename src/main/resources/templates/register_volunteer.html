@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volunteer Registration</title>
+    <link rel="stylesheet" href="/static/css/register_volunteer.css">
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const registrationForm = document.getElementById('registrationForm');
+            const errorElement = document.getElementById('errorMessage');
+            const successElement = document.getElementById('successMessage');
+            const redirectElement = document.getElementById('redirectMessage'); // Element pentru mesajul de redirecționare
+
+            registrationForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                // Colectați datele din formular
+                const formData = new FormData(this);
+
+                // Ascundeți mesajele existente
+                errorElement.style.display = 'none';
+                successElement.style.display = 'none';
+                redirectElement.style.display = 'none'; // Ascundeți mesajul de redirecționare
+
+                // Trimiteți datele către server
+                fetch('/volunteers/register', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => response.json()) // Aici parsează răspunsul ca JSON
+                    .then(data => {
+                        if (data.success) {
+                            successElement.textContent = data.message;
+                            successElement.style.display = 'block';
+
+                            // Afișați mesajul de redirectionare dacă există
+                            if (data.redirectMessage) {
+                                redirectElement.textContent = data.redirectMessage;
+                                redirectElement.style.display = 'block';
+                            }
+
+                            setTimeout(function () {
+                                window.location.href = '/volunteers/login';
+                            }, 3000);
+                        } else {
+                            errorElement.textContent = data.message;
+                            errorElement.style.display = 'block';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        errorElement.textContent = 'An error occurred. Please try again.';
+                        errorElement.style.display = 'block';
+                    });
+            });
+        });
+
+    </script>
+
+</head>
+<body>
+<div class="registration-container">
+    <img src="/static/css/image/RO-poli-logo-colour-1.png" alt="Logo" class="logo">
+    <h2>Volunteer Registration</h2>
+    <form id="registrationForm" action="/volunteers/register" method="post">
+        <label for="firstName">First Name:</label>
+        <input type="text" id="firstName" name="firstName" required>
+
+        <label for="lastName">Last Name:</label>
+        <input type="text" id="lastName" name="lastName" required>
+
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+
+        <label for="repeatPassword">Repeat Password:</label>
+        <input type="password" id="repeatPassword" name="repeatPassword" required>
+
+        <label for="nationality">Nationality:</label>
+        <input type="text" id="nationality" name="nationality" required>
+
+        <button type="submit">Register</button>
+        <!-- Mesaje de eroare și succes -->
+
+    </form>
+    <p id="errorMessage" class="message error" style="color: red; display: none;"></p>
+    <p id="successMessage" class="message success" style="color: green; display: none;"></p>
+    <p id="redirectMessage" class="message success" style="color: green; display: none;"></p>
+
+</div>
+</body>
+</html>

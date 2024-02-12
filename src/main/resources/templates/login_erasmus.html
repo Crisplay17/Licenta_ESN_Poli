@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erasmus Login Page</title>
+    <link rel="stylesheet" href="/static/css/login_erasmus.css">
+</head>
+<body>
+<div class="login-container">
+    <h2>Erasmus Login</h2>
+    <form action="/erasmus/login" method="post" id="erasmusLoginForm">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+
+        <button type="submit">Login</button>
+    </form>
+    <p>Don't have an account? <a href="/erasmus/register">Register here</a></p>
+</div>
+</body>
+</html>

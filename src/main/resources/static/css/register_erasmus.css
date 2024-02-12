@@ -1,0 +1,88 @@
+/* styles.css */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Folosiți min-height în loc de height pentru a evita supraaglomerarea */
+}
+
+.registration-container {
+    background-color: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+    width: 80%; /* Lățimea formularului */
+    max-width: 600px; /* Lățimea maximă a formularului */
+    margin-top: 20px; /* Spațiu între titlu și formular */
+    margin-bottom: 20px; /* Spațiu între formular și partea de jos a containerului */
+}
+
+h2 {
+    color: #333; /* Schimbați culoarea la albastru pentru a evidenția titlul */
+    font-size: 24px; /* Măriți dimensiunea fontului pentru titlu */
+    margin: 20px 0; /* Spațiu în partea de sus și de jos a titlului */
+    text-transform: uppercase; /* Faceți literele majuscule pentru titlu */
+    font-weight: bold;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 5px;
+    text-align: left; /* Așezare la stânga pentru etichete */
+    width: 100%; /* Lățime de 100% pentru etichete pentru a le alinia la stânga */
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%; /* Umplere completă a containerului */
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 14px;
+    box-sizing: border-box; /* Adăugați această proprietate pentru a include padding-ul și border-ul în lățimea totală */
+}
+
+button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+p {
+    margin-top: 10px; /* Spațiu între buton și text */
+    text-align: center; /* Așezare centrală pentru text */
+}
+
+a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
