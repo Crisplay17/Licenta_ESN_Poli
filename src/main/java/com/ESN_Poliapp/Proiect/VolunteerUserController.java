@@ -1,16 +1,28 @@
 package com.ESN_Poliapp.Proiect;
 
-import jakarta.servlet.http.HttpServletRequest;
+
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+@CrossOrigin
 @Controller
 @RequestMapping("/volunteers")
 public class VolunteerUserController {
@@ -18,9 +30,17 @@ public class VolunteerUserController {
     private final VolunteerUserService volunteerUserService;
 
     @Autowired
+    private EventService eventService;
+    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+
+    @Autowired
     public VolunteerUserController(VolunteerUserService volunteerUserService) {
         this.volunteerUserService = volunteerUserService;
     }
+
 
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
@@ -32,173 +52,184 @@ public class VolunteerUserController {
     @ResponseBody
     public ResponseEntity<?> registerVolunteerUser(@ModelAttribute VolunteerUser volunteerUser) {
         try {
+
+//            // Criptează parola utilizatorului înainte de a o salva în baza de date
+//            String encodedPassword = passwordEncoder.encode(volunteerUser.getPassword());
+//            volunteerUser.setPassword(encodedPassword);
+
+            // Atribuie rolurile utilizatorului în funcție de tipul de înregistrare
+
+            volunteerUser.setRoles(Collections.singletonList(UserRole.VOLUNTEER_USER)); // Atribuie rolul de voluntar
+
+
             // Validați datele voluntarului și apelați serviciul pentru înregistrarea voluntarului în baza de date
             volunteerUserService.registerVolunteerUser(volunteerUser);
 
-            // În caz de succes, returnați un răspuns JSON cu un mesaj de succes
+            // În caz de succes, returnează un răspuns JSON cu un mesaj de succes
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
             response.put("message", "Volunteer registered successfully");
             response.put("redirectMessage", "Redirecting to login...");
 
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(response);
         } catch (Exception e) {
-            // În cazul în care apar erori în procesul de înregistrare, returnați un răspuns JSON cu mesajul de eroare
+            // În cazul în care apar erori, returnează un răspuns JSON cu un mesaj de eroare
             Map<String, Object> response = new HashMap<>();
             response.put("success", false);
             response.put("message", "Registration error");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
-    }
 
-    @PostMapping("/login")
-    public String loginVolunteerUser(@RequestParam String username, @RequestParam String password, Model model) {
-        // Verifică autentificarea voluntarului aici (poți utiliza Spring Security sau o altă logică personalizată).
-
-        boolean authenticationSuccessful = true;
-        if (authenticationSuccessful) {
-            return "redirect:/Main"; // Redirecționează către pagina principală după autentificare cu succes.
-        } else {
-            // Dacă autentificarea eșuează, adaugă un mesaj de eroare în model.
-            model.addAttribute("errorMessage", "Autentificare eșuată. Verificați datele introduse.");
-            return "login_volunteer"; // Afișează din nou pagina de login cu mesajul de eroare.
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(response);
         }
     }
 
     @GetMapping("/login")
-    public String showLoginForm() {
-
+    public String showLoginForm(Model model) {
+        model.addAttribute("volunteerUser", new VolunteerUser());
         return "login_volunteer"; // Numele paginii HTML pentru formularul de autentificare
     }
-    @GetMapping("/home")
-    public String showHomePage() {
-        return "Main"; // Numele paginii principale pe care ai creat-o.
-    }
-
-}
 
 
-
-/*
-package com.ESN_Poliapp.Proiect;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-
-
-@RestController
-@RequestMapping("/volunteers")
-public class VolunteerUserController {
-
-    private final VolunteerUserService volunteerUserService;
-
-    @Autowired
-    public VolunteerUserController(VolunteerUserService volunteerUserService) {
-        this.volunteerUserService = volunteerUserService;
-    }
-
-    @GetMapping
-    public List<VolunteerUser> getAllVolunteerUsers() {
-        return volunteerUserService.getAllVolunteerUsers();
-    }
-
-    @GetMapping("/{id}")
-    public VolunteerUser getVolunteerUserById(@PathVariable Long id) {
-        return volunteerUserService.getVolunteerUserById(id);
-    }
-
-    @PostMapping("/register")
-    public ResponseEntity<String> createVolunteerUser(@RequestBody VolunteerUser volunteerUser) {
+    @PostMapping("/login")
+    @ResponseBody
+    public ResponseEntity<?> loginVolunteerUser(@ModelAttribute VolunteerUser volunteerUser, HttpSession session) {
         try {
-            // Validați datele voluntarului, verificați dacă există erori de validare.
-            // De exemplu, puteți verifica dacă toate câmpurile sunt completate corect.
+            // Încercați să obțineți utilizatorul voluntar din baza de date utilizând metoda de serviciu
+            VolunteerUser authenticatedUser = volunteerUserService.getVolunteerUserByUsernameAndPassword(volunteerUser.getUsername(), volunteerUser.getPassword());
 
-            // Apelați serviciul pentru înregistrarea voluntarului în baza de date
-            VolunteerUser registeredUser = volunteerUserService.registerVolunteerUser(volunteerUser);
+            // Verificați dacă autentificarea a fost cu succes
+            if (authenticatedUser != null) {
+                // Verificați dacă utilizatorul este admin și atribuiți acest lucru în sesiune
+                boolean isAdmin = volunteerUserService.isUserAdmin(authenticatedUser.getId());
 
-            // Returnați un mesaj de succes sau un cod de stare 200 OK dacă înregistrarea a fost reușită
-            return ResponseEntity.ok("Volunteer registered successfully");
+                // Actualizați sesiunea cu numele de utilizator, rolul și ID-ul
+                session.setAttribute("loggedInUserId", authenticatedUser.getId());
+                session.setAttribute("loggedInUsername", authenticatedUser.getUsername());
+                session.setAttribute("isAdmin", isAdmin);
+
+                // Construiți răspunsul JSON de succes
+                Map<String, Object> response = new HashMap<>();
+                response.put("success", true);
+                response.put("message", "Volunteer logged in successfully");
+                return ResponseEntity.ok().body(response);
+            } else {
+                // În cazul în care autentificarea a eșuat, returnați un răspuns JSON cu un mesaj de eroare
+                Map<String, Object> response = new HashMap<>();
+                response.put("success", false);
+                response.put("message", "Login error. Incorrect username or password.");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+            }
         } catch (Exception e) {
-            // În cazul în care apar erori în procesul de înregistrare, puteți returna un mesaj de eroare
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error registering volunteer: " + e.getMessage());
+            // În cazul în care apar erori în procesul de autentificare, returnați un răspuns JSON cu mesajul de eroare
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", "Error during login process.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
 
-    @PutMapping("/{id}")
-    public VolunteerUser updateVolunteerUser(@PathVariable Long id, @RequestBody VolunteerUser volunteerUser) {
-        return volunteerUserService.updateVolunteerUserData(id, volunteerUser);
+
+
+
+
+    @GetMapping("/home")
+    public String showHomePage(Model model) {
+//         Obținem lista de evenimente viitoare și o adăugăm în model
+        List<Event> upcomingEvents = eventService.getUpcomingEvents();
+        model.addAttribute("upcomingEvents", upcomingEvents);
+
+        // Obținem lista de evenimente trecute și o adăugăm în model
+        List<Event> pastEvents = eventService.getPastEvents();
+        model.addAttribute("pastEvents", pastEvents);
+
+        // Returnăm numele paginii HTML pentru afișarea paginii principale
+        return "Main";
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteVolunteerUser(@PathVariable Long id) {
-        volunteerUserService.deleteVolunteerUser(id);
+    @GetMapping("/logout")
+    public String logoutVolunteerUser(HttpSession session) {
+        // Ștergeți toate atributele din sesiune la deconectare
+        session.invalidate();
+        return "redirect:/volunteers/home";
     }
+
+
+    @GetMapping("/profile")
+    public String showUserProfile(Model model, HttpSession session) {
+        String loggedInUsername = (String) session.getAttribute("loggedInUsername");
+        VolunteerUser user = volunteerUserService.getVolunteerUserByUsername(loggedInUsername);
+        model.addAttribute("user", user);
+        return "user_profile"; // Numele paginii HTML pentru profilul utilizatorului
+    }
+
+
+    @PostMapping("/profile")
+    public String updateProfile(@ModelAttribute VolunteerUser updatedUser, HttpSession session) {
+        String loggedInUsername = (String) session.getAttribute("loggedInUsername");
+        VolunteerUser existingUser = volunteerUserService.getVolunteerUserByUsername(loggedInUsername);
+        // Actualizați datele utilizatorului existent cu noile date primite din formular
+        existingUser.setEmail(updatedUser.getEmail());
+        existingUser.setPassword(updatedUser.getPassword());
+        existingUser.setNationality(updatedUser.getNationality());
+        // Apelați serviciul pentru a actualiza datele utilizatorului în baza de date
+        volunteerUserService.updateVolunteerUser(existingUser);
+        // Redirecționați către pagina principală sau altă pagină după actualizare
+        return "redirect:/volunteers/home";
+    }
+
+    @GetMapping("/profilePicture")
+    public ResponseEntity<byte[]> getProfilePicture(HttpSession session) {
+        String loggedInUsername = (String) session.getAttribute("loggedInUsername");
+        if (loggedInUsername != null) {
+            VolunteerUser loggedInUser = volunteerUserService.getVolunteerUserByUsername(loggedInUsername);
+            byte[] profilePictureBytes = loggedInUser.getProfilePicture();
+            if (profilePictureBytes != null) {
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.IMAGE_JPEG);
+                return new ResponseEntity<>(profilePictureBytes, headers, HttpStatus.OK);
+            } else {
+                // Returnează imaginea implicită de profil
+                try {
+                    Resource resource = new ClassPathResource("/static/css/image/esn.png");
+                    byte[] defaultProfilePictureBytes = Files.readAllBytes(resource.getFile().toPath());
+                    HttpHeaders headers = new HttpHeaders();
+                    headers.setContentType(MediaType.IMAGE_JPEG);
+                    return new ResponseEntity<>(defaultProfilePictureBytes, headers, HttpStatus.OK);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return ResponseEntity.notFound().build();
+                }
+            }
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+
+    @PostMapping("/profilePicture")
+    public String updateProfilePicture(@RequestParam("profilePicture") MultipartFile profilePictureFile, HttpSession session) {
+        try {
+            byte[] profilePictureBytes = profilePictureFile.getBytes();
+            String loggedInUsername = (String) session.getAttribute("loggedInUsername");
+            VolunteerUser loggedInUser = volunteerUserService.getVolunteerUserByUsername(loggedInUsername);
+            loggedInUser.setProfilePicture(profilePictureBytes); // Setează imaginea de profil în obiectul utilizatorului
+
+            // Introduce o întârziere de 5 secunde pentru a simula procesarea imaginii
+            Thread.sleep(2000); // 5000 milisecunde = 5 secunde
+
+            volunteerUserService.updateVolunteerUser(loggedInUser); // Actualizează utilizatorul în baza de date
+            return "redirect:/volunteers/profile"; // Redirecționează către pagina de profil
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+            // Tratează orice excepții legate de manipularea fișierului
+            return "redirect:/volunteers/profile"; // Redirecționează cu mesaj de eroare în caz de eșec
+        }
+    }
+
+
+
+
 }
-
-
-
-
-@Controller
-@RequestMapping("/volunteer")
-public class VolunteerUserController {
-
-    @Autowired
-    private VolunteerUserService volunteerUserService;
-
-    // Endpoint pentru afișarea paginii de autentificare a voluntarilor
-    @GetMapping("/login")
-    public String showVolunteerLoginForm() {
-        return "login_volunteer"; // Numele fișierului HTML pentru autentificarea voluntarilor
-    }
-
-    // Endpoint pentru afișarea paginii de înregistrare a voluntarilor
-    @GetMapping("/register")
-    public String showVolunteerRegistrationForm(Model model) {
-        model.addAttribute("volunteerUser", new VolunteerUser());
-        return "register_volunteer"; // Numele fișierului HTML pentru înregistrarea voluntarilor
-    }
-
-    // Endpoint pentru procesarea formularului de înregistrare a voluntarilor
-    @PostMapping("/register")
-    public String registerVolunteerUser(@ModelAttribute VolunteerUser volunteerUser) {
-        // Implementați aici logica de înregistrare a voluntarilor și salvare în baza de date
-        volunteerUserService.registerVolunteerUser(volunteerUser);
-        return "redirect:/volunteer/login"; // Redirecționează către pagina de autentificare
-    }
-}
-
-// Endpoint pentru obținerea unui voluntar după ID
-    @GetMapping("/{id}")
-    public String getVolunteerUser(@PathVariable Long id, Model model) {
-        VolunteerUser volunteerUser = volunteerUserService.getVolunteerUserById(id);
-        model.addAttribute("volunteerUser", volunteerUser);
-        return "profile_volunteer"; // Numele fișierului HTML pentru profilul voluntarului
-    }
-
-    // Endpoint pentru afișarea formularului de actualizare a datelor voluntarului
-    @GetMapping("/{id}/edit")
-    public String showEditVolunteerForm(@PathVariable Long id, Model model) {
-        VolunteerUser volunteerUser = volunteerUserService.getVolunteerUserById(id);
-        model.addAttribute("volunteerUser", volunteerUser);
-        return "edit_volunteer"; // Numele fișierului HTML pentru editarea datelor voluntarului
-    }
-
-    // Endpoint pentru procesarea formularului de actualizare a datelor voluntarului
-    @PostMapping("/{id}/edit")
-    public String updateVolunteerUserData(@PathVariable Long id, @ModelAttribute VolunteerUser updatedUserData) {
-        volunteerUserService.updateVolunteerUserData(id, updatedUserData);
-        return "redirect:/volunteer/" + id; // Corectat formatul pentru redirecționare
-    }
-
-    // Endpoint pentru ștergerea unui voluntar după ID
-    @GetMapping("/{id}/delete")
-    public String deleteVolunteerUser(@PathVariable Long id) {
-        volunteerUserService.deleteVolunteerUser(id);
-        return "redirect:/volunteer/login"; // Redirecționează către pagina de autentificare
-    }
-    */
