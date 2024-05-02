@@ -1,0 +1,302 @@
+body {
+    font-family: 'Lato', sans-serif;
+    margin: 60px; /* Adăugați margini de 20px în jurul paginii */
+}
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-gap: 20px;
+    justify-content: center;
+    padding: 20px;
+}
+
+.event {
+    position: relative; /* Adăugăm poziționarea relativă pentru a poziționa absolut conținutul în interior */
+    width: auto; /* Lățime automată pentru a păstra dimensiunea originală */
+    max-width: 100%; /* Lățime maximă pentru a se încadra în cadrul containerului */
+    margin: 0 auto; /* Centrare pe pagină */
+    display: block; /* Afișare ca bloc */
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+
+.event .event-button {
+    display: flex;
+    justify-content: space-around; /* Aliniere butoane în spațiu egal */
+    align-items: center;
+    padding: 10px; /* Adaugăm spațiu între butoane și detalii */
+}
+
+.event .event-button button, .btn-details {
+    flex: 1; /* Împărțim spațiul disponibil între butoane */
+    margin: 0 5px; /* Adăugăm margini între butoane */
+}
+
+
+.event:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.event-background {
+    position: relative;
+}
+
+.event-background img {
+    max-height: 200px; /* Limităm înălțimea imaginii la maxim 200px */
+    width: 100%; /* Menținem proporțiile corecte ale imaginii */
+    /*height: 50%;*/
+    object-fit: cover;
+    object-position: center;
+}
+
+
+.event .event-cause {
+    position: absolute;
+    top: -180px; /* Poziționarea relativă la imaginea de fundal */
+    right: 10px; /* Poziționare în partea dreaptă */
+    padding: 5px 10px;
+    margin: 0;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 5px;
+    z-index: 1;
+}
+
+/* Media query pentru ecrane mai mici */
+@media screen and (max-width: 1080px) {
+    .event .event-cause {
+        font-size: 14px; /* Mărimea fontului ajustată pentru ecrane mai mici */
+        padding: 3px 6px; /* Spațiul între text și marginea containerului */
+        top: -160px; /* Poziționare mai sus pe ecrane mici */
+        right: 5px; /* Poziționare mai aproape de marginea dreaptă */
+    }
+}
+
+
+
+.event-name {
+    position: absolute;
+    top: -30px; /* Poziționăm la 10px distanță de marginea de sus a imaginii */
+    left: 10px; /* Poziționăm la 10px distanță de marginea din stânga a imaginii */
+    color: #fff; /* Culorăm textul în alb */
+    font-size: 20px; /* Mărimea fontului */
+    padding: 5px 10px; /* Spațiu în jurul textului */
+    background-color: rgba(0, 0, 0, 0.7); /* Fundal semi-transparent */
+    border-radius: 5px; /* Rotunjim colțurile */
+    z-index: 1; /* Asigurăm că textul este peste imagine */
+}
+
+.event-details,
+.event-button {
+    position: relative; /* Asigurăm că celelalte conținuturi sunt poziționate corect */
+    z-index: 2; /* Asigurăm că celelalte conținuturi sunt peste text */
+}
+
+.event-details p i {
+    margin-bottom: 5px; /* Spațiu între pictogramă și text */
+}
+
+
+
+
+
+
+
+.event h2 {
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+}
+
+.event h2 i {
+    margin-right: 10px;
+}
+
+.event p {
+    margin-bottom: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.btn-details {
+    background-color: #00aeef;
+    color: #fff;
+    border: none;
+    text-align: center;
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-details:hover {
+    background-color: #2E3192;
+}
+.btn-join {
+    background-color: #EC008C;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-join:hover {
+    background-color: #2E3192;
+}
+
+
+.event-details {
+    padding: 20px;
+}
+
+.event-icon {
+    color: #00aeef; /* Color for the event icons */
+    margin-right: 10px;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Aliniere pe mijloc */
+    margin-bottom: 50px; /* Reducem spațiul de dedesubt */
+    margin-top: 50px; /* Adăugăm spațiu deasupra */
+}
+
+.search-container input[type=text] {
+    flex: 1;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px ;
+    margin-right: 10px; /* Adăugăm spațiu între bara de căutare și butonul de căutare */
+}
+
+.search-container button {
+    padding: 10px 15px;
+    background: #00aeef;
+    color: white;
+    border: none;
+    border-radius: 5px; /* Rotunjim colțurile doar la dreapta */
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.search-container button:hover {
+    background-color: #2E3192;
+}
+
+.search-sort-container {
+    display: flex;
+    justify-content: center; /* Aliniere pe mijloc */
+    align-items: center;
+    margin-bottom: 20px;
+    margin-top: 20px; /* Spațiu deasupra */
+}
+
+.sort-options select {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+
+.joined-button {
+    /* Stiluri pentru butonul care a fost apăsat și s-a alăturat deja evenimentului */
+    /* Adauga aici stilurile dorite pentru butonul "Joined" */
+    background-color: #7AC143;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.pagination {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    margin-top: 20px; /* Adaugă un spațiu de la conținutul de deasupra */
+}
+
+.pagination li {
+    display: inline-block;
+    margin: 0 5px;
+}
+
+.pagination li a {
+    text-decoration: none;
+    border: 1px solid #ddd;
+    color: #333;
+    transition: all 0.3s ease;
+    display: block;
+    padding: 10px 15px;
+    border-radius: 5px;
+    white-space: nowrap; /* Textul nu va fi împărțit la mai multe linii */
+    overflow: hidden; /* Ascunde orice depășește lățimea butonului */
+    text-overflow: ellipsis; /* Afiseaza puncte de suspensie pentru textul care depășește lățimea butonului */
+
+}
+
+.pagination li a:hover {
+    background-color: #f2f2f2;
+}
+
+.pagination li.disabled a{
+    color: #cccccc;
+    pointer-events: none;
+    opacity: 0.5; /* Reducem opacitatea pentru a indica faptul că elementul este dezactivat */
+    cursor: not-allowed; /* Schimbăm cursorul când elementul este dezactivat */
+}
+
+@media (max-width: 768px) {
+    .pagination {
+        flex-wrap: wrap;
+    }
+
+    .pagination li {
+        margin: 5px;
+    }
+
+    .pagination li a {
+        padding: 6px 12px;
+    }
+}
+.pagination li.active a {
+    background-color: #2E3192; /* Culoarea fundalului pentru pagina curentă */
+    padding: 8px 16px;
+    color: #fff; /* Culoarea textului pentru pagina curentă */
+}
+
+
+
+
+
+
+
+
+
+
+
