@@ -5,39 +5,135 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ESN Poli.app</title>
     <link rel="stylesheet" href="/static/css/Main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Link către CSS-ul Slick Carousel -->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css"/>
+    <!-- Biblioteca jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- Biblioteca Slick Carousel -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+
 </head>
 <body>
 <header>
-    <nav>
+    <nav class="fixed-nav">
         <div class="logo">
-            <img src="/static/css/image/RO-poli-logo-colour-1.png" alt="Logo"><h6>app</h6>
-
-        <ul>
-            <div class="nav-center">
-                <a href="#">ESN Card</a>
-            </div>
-            <div class="nav-center">
-                <a href="#">Add Events/Events</a>
-            </div>
-
-            <li class="user-profile">
-                <img src="/static/css/image/esn.png" alt="User Avatar">
-                <span>Nume Utilizator</span>
-            </li>
-            <li><a href="#">Log Out</a></li>
-        </ul>
-
+            <img src="/static/css/image/RO-poli-logo-colour-1.png" alt="Logo">
+            <h6>app</h6>
         </div>
 
+        <div class="nav-links"> <!-- Adăugăm un container pentru link-uri -->
+            <ul>
+                <li><a href="#">ESNcard</a></li>
+
+                <li th:if="${session.loggedInUsername != null}">
+                    <a href="#">Add Events</a>
+                <div class="dropdown-content">
+                    <a href="#" onclick="openPopup()">Add Event</a>
+                    <a href="/events/events_page">Events</a>
+                </div>
+                </li>
+
+                <li th:if="${session.loggedInUsername == null}"><a href="/events/events_page">Events</a></li>
+                <li th:if="${session.isAdmin}">
+                    <a href="/admin">Admin</a>
+                </li>
+            </ul>
+
+            <ul>
+                <li class="user-profile">
+                    <a th:if="${session.loggedInUsername != null}" th:href="@{/volunteers/profile}">
+                        <img th:src="@{/volunteers/profilePicture}" alt="Profile Picture" >
+                        <span th:text="${session.loggedInUsername} ? ${session.loggedInUsername} : ''"></span>
+                    </a>
+                </li>
+
+                <li>
+                    <a th:if="${session.loggedInUsername != null}" href="/volunteers/logout">Log Out</a>
+                    <a th:if="${session.loggedInUsername == null}" href="/volunteers/login">Log In</a>
+                </li>
+            </ul>
+        </div>
     </nav>
 </header>
+
+<video autoplay muted>
+    <source src="/static/css/image/esn background.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
 <main>
+<!--    <section class="events">-->
+<!--        <h2>ESN Events</h2>-->
+<!--        </div>-->
+<!--        &lt;!&ndash; Aici poți afișa lista evenimentelor &ndash;&gt;-->
+<!--    </section>-->
+    <!-- Secțiunea de evenimente -->
     <section class="events">
-        <h2>Evenimente</h2>
-        <!-- Aici poți afișa lista evenimentelor -->
+        <h2>Upcoming Events</h2>
+        <div class="container">
+            <!-- Container pentru caruselul Slick -->
+            <div class="slick-carousel">
+                <!-- Iterăm prin lista evenimentelor viitoare și le afișăm -->
+                <div th:each="event : ${upcomingEvents}" class="event">
+                    <div class="event-background">
+                        <!-- Verificăm dacă evenimentul are o imagine de fundal -->
+                        <img th:if="${event.backgroundImage != null}"
+                             th:src="@{'/events/background-image?id=' + ${event.id}}"
+                             alt="Event Background">
+
+                        <!-- Dacă evenimentul nu are o imagine de fundal, afișăm imaginea implicită -->
+                        <img th:unless="${event.backgroundImage != null}"
+                             src="/static/css/image/event.png"
+                             alt="Default Event Background">
+                    </div>
+                    <div class="event-details">
+                        <h2 class="event-name"><i class="fas fa-calendar-alt"></i> <span th:text="${event.eventName}"></span></h2>
+                        <p><i class="fas fa-calendar event-icon"></i><span th:text="${#dates.format(event.eventDate, 'dd-MM-yyyy')}"></span></p>
+                        <p><i class="fas fa-map-marker-alt event-icon"></i>  <span th:text="${event.eventLocation}"></span></p>
+                        <p class="event-cause"><i class="fas fa-hand-holding-heart event-icon"></i><span th:text="${event.eventCause}"></span></p>
+                        <p><i class="fas fa-users event-icon"></i><span th:text="${event.eventParticipants}"></span></p>
+                        <p><i class="fas fa-file-alt event-icon"></i> <span th:text="${event.eventDescription}"></span></p>
+                        <p><i class="fas fa-bullseye event-icon"></i> <span th:text="${event.eventGoal}"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Adaugă săgeți de navigare aici -->
+        <button class="slick-prev">Previous</button>
+        <button class="slick-next">Next</button>
+    </section>
+
+
+
+
+
+    <section class="events1">
+        <h2>Past Events</h2>
+        <div class="container1">
+            <!-- Iterăm prin lista evenimentelor trecute și le afișăm -->
+            <div th:each="event : ${pastEvents}" class="event1">
+                <div class="event-background1">
+                    <!-- Verificăm dacă evenimentul are o imagine de fundal -->
+                    <img th:if="${event.backgroundImage != null}"
+                         th:src="@{'/events/background-image?id=' + ${event.id}}"
+                         alt="Event Background">
+
+                    <!-- Dacă evenimentul nu are o imagine de fundal, afișăm imaginea implicită -->
+                    <img th:unless="${event.backgroundImage != null}"
+                         src="/static/css/image/event.png"
+                         alt="Default Event Background">
+                </div>
+                <div class="event-details1">
+                    <h2 class="event-name1"><i class="fas fa-calendar-alt"></i> <span th:text="${event.eventName}"></span></h2>
+                    <!-- Adăugați alte detalii despre eveniment aici -->
+                </div>
+            </div>
+        </div>
     </section>
     <section class="esn-card">
-        <h2>ESN Card</h2>
+        <h2>ESNcard</h2>
         <!-- Aici poți afișa informații despre ESN Card -->
     </section>
 </main>
@@ -46,7 +142,257 @@
         <a href="#">Facebook</a>
         <a href="#">Instagram</a>
     </div>
-    <p>&copy; 2023 ESN Poli</p>
+    <p><i class="fa fa-copyright"></i> 2023 ESN Poli</p>
 </footer>
+
+<!-- Pop-up pentru adăugarea unui eveniment -->
+<div class="popup" id="addEventPopup">
+    <div class="popup-content">
+        <button class="close-btn" onclick="closePopup()">&times;</button>
+        <h2 style="text-align: center;">Add Event</h2>
+        <form id="eventForm" action="/events/events_page" method="post" enctype="multipart/form-data">
+            <label for="eventName" >Event Name:</label>
+            <input type="text" id="eventName" name="eventName" required style="width: 100%; padding: 10px; margin-bottom: 15px;">
+
+            <label for="eventDate">Event Date:</label>
+            <input type="date" id="eventDate" name="eventDate" required style="width: 100%; padding: 10px; margin-bottom: 15px;">
+
+            <label for="eventLocation">Event Location:</label>
+            <input type="text" id="eventLocation" name="eventLocation" required style="width: 100%; padding: 10px; margin-bottom: 15px;">
+
+            <label for="eventCause">Event Cause:</label>
+            <div class="event-cause-dropdown" >
+                <select id="eventCause" name="eventCause" required >
+                    <option value="" disabled selected>Select your cause</option>
+                    <option value="Culture">Culture</option>
+                    <option value="Education & Youth">Education & Youth</option>
+                    <option value="Environmental Sustainability">Environmental Sustainability</option>
+                    <option value="Health & Well-being">Health & Well-being</option>
+                    <option value="Skills & Employability">Skills & Employability</option>
+                    <option value="Social Inclusion">Social Inclusion</option>
+                </select>
+            </div>
+
+            <label for="eventParticipants">Event Participants:</label>
+            <input type="number" id="eventParticipants" name="eventParticipants" value="0" min="0" style="width: 100%; padding: 10px; margin-bottom: 15px;">
+
+            <label for="eventDescription">Event Description:</label>
+            <!-- Textarea ascunsă pentru stocarea valorilor din editorul Quill -->
+            <textarea id="eventDescription" name="eventDescription" style="width: 100%; padding: 10px; margin-bottom: 15px; height: 150px; resize: none;"></textarea>
+
+            <label for="eventGoal">Event Goal:</label>
+            <input type="text" id="eventGoal" name="eventGoal" style="width: 100%; padding: 10px; margin-bottom: 15px;">
+
+            <label for="eventOrganizer">Event Organizer:</label>
+            <div class="event-organizer-dropdown">
+                <select id="eventOrganizer" name="eventOrganizer" required>
+                    <option value="" disabled selected>Select the organizer</option>
+                    <option value="ESN Poli">ESN Poli</option>
+                    <option value="ESN UniBucharest">ESN UniBucharest</option>
+                    <option value="ESN ASE-CMP Bucharest">ESN ASE-CMP Bucharest</option>
+                    <!-- Adăugați aici alte opțiuni, dacă este necesar -->
+                </select>
+            </div>
+            <label for="eventLink">Event Link:</label>
+            <input type="url" id="eventLink" name="eventLink" style="width: 100%; padding: 10px; margin-bottom: 15px;" placeholder="Enter event link">
+
+            <label for="backgroundImage" class="custom-file-upload">
+                <i class="fas fa-cloud-upload-alt"></i> Choose Background Image
+            </label>
+            <input type="file" id="backgroundImage" name="backgroundImage" accept="image/*" style="display: none;">
+            <!-- Element pentru previzualizarea imaginii încărcate -->
+            <div id="imagePreview" style="margin-bottom: 15px; text-align: center;"></div>
+
+            <button type="submit"  style="width: 100%; padding: 10px; background-color: #00aeef; color: #fff; border: none; border-radius: 5px; cursor: pointer;">Add Event</button>
+            <div id="message" style="display: none;"></div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Ascultă evenimentul de schimbare a valorii în câmpul de încărcare a imaginii
+    document.getElementById('backgroundImage').addEventListener('change', function() {
+        // Obține imaginea încărcată
+        var file = this.files[0];
+        // Verifică dacă un fișier a fost selectat
+        if (file) {
+            // Creează un obiect URL pentru imaginea încărcată
+            var imageURL = URL.createObjectURL(file);
+            // Actualizează conținutul div-ului pentru preview-ul imaginii
+            document.getElementById('imagePreview').innerHTML = '<img src="' + imageURL + '" alt="Preview">';
+
+            // Redimensionează imaginea încărcată pentru a se potrivi în cadrul formularului (opțional)
+            var img = document.createElement('img');
+            img.onload = function() {
+                // Redimensionează imaginea dacă este prea mare
+                var maxWidth = 300; // Lățimea maximă dorită pentru imagine
+                var maxHeight = 200; // Înălțimea maximă dorită pentru imagine
+                var width = this.width;
+                var height = this.height;
+                // Verifică dacă imaginea trebuie redimensionată
+                if (width > maxWidth || height > maxHeight) {
+                    var ratio = Math.min(maxWidth / width, maxHeight / height);
+                    width *= ratio;
+                    height *= ratio;
+                }
+                // Aplică noile dimensiuni imaginii
+                img.width = width;
+                img.height = height;
+                // Actualizează conținutul div-ului pentru preview-ul imaginii cu imaginea redimensionată
+                document.getElementById('imagePreview').innerHTML = '';
+                document.getElementById('imagePreview').appendChild(img);
+            };
+            img.src = imageURL;
+        }
+    });
+
+    // Adăugăm funcționalitatea pentru afișarea și ascunderea meniului dropdown
+    document.addEventListener('DOMContentLoaded', function () {
+        const dropdownToggles = document.querySelectorAll('.nav-links ul li');
+        dropdownToggles.forEach(function (toggle) {
+            toggle.addEventListener('click', function () {
+                const dropdownContent = this.querySelector('.dropdown-content');
+                if (dropdownContent) {
+                    dropdownContent.classList.toggle('show');
+                }
+            });
+        });
+    });
+
+    function openPopup() {
+        document.getElementById('addEventPopup').style.display = 'block';
+    }
+
+
+    function closePopup() {
+        document.getElementById('addEventPopup').style.display = 'none';
+    }
+
+    function showMessage(message, isSuccess) {
+        const messageElement = document.getElementById('message');
+        messageElement.textContent = message;
+        messageElement.classList.remove('success', 'error'); // Eliminăm clasele de succes și eroare anterioare
+        messageElement.classList.add(isSuccess ? 'success' : 'error'); // Adăugăm clasa corespunzătoare în funcție de succesul sau eșecul operației
+        messageElement.style.display = 'block';
+
+        if (isSuccess) {
+            setTimeout(function () {
+                window.location.href = '/events/events_page'; // Redirecționare către pagina de creare a evenimentului
+            }, 1000); // 2000 milisecunde = 2 secunde
+        }
+        // Ascundem mesajul după 1 secundă
+        setTimeout(function () {
+            messageElement.style.display = 'none';
+        }, 1000); // 1000 milisecunde = 1 secundă
+    }
+
+    document.getElementById('eventForm').addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevenim acțiunea implicită a formularului
+
+        // Verificăm dimensiunile imaginii încărcate
+        var fileInput = document.getElementById('backgroundImage');
+        var file = fileInput.files[0];
+        if (file) {
+            var img = new Image();
+            img.onload = function() {
+                if (this.width > 1920 || this.height > 1080) {
+                    showMessage("Image dimensions must be less than or equal to 1920x1080 pixels.", false);
+                    return;
+                } else {
+                    // Dacă dimensiunile sunt în regulă, trimitem formularul către backend
+                    submitForm();
+                }
+            };
+            img.src = URL.createObjectURL(file);
+        } else {
+            // Dacă nu s-a selectat nicio imagine, trimitem formularul fără a verifica dimensiunile
+            submitForm();
+        }
+    });
+
+    function submitForm() {
+        // Trimitem datele formularului către backend folosind fetch API
+        fetch('/events/events_page', {
+            method: "post",
+            body: new FormData(document.getElementById('eventForm'))
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Verificăm răspunsul primit de la backend
+                if (data.success) {
+                    showMessage(data.message, true);
+                    // Puteți face orice altceva după afișarea mesajului de succes
+                } else {
+                    // Dacă a apărut o eroare în timpul creării evenimentului, afișăm mesajul de eroare
+                    showMessage(data.message, false);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // În caz de eroare, afișăm un mesaj generic de eroare
+                showMessage('There was an error. Please try again later.', false);
+            });
+    }
+    // Resetează formularul când utilizatorul revine pe pagină
+    window.addEventListener('pageshow', function (event) {
+        var form = document.getElementById('eventForm');
+        if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+            form.reset();
+        }
+    });
+
+
+    // Obține elementul input pentru data evenimentului
+    var eventDateInput = document.getElementById('eventDate');
+
+    // Obține data curentă
+    var currentDate = new Date();
+    var currentDateString = currentDate.toISOString().split('T')[0]; // Formatează data curentă în formatul acceptat de input type="date"
+
+    // Setează data curentă ca valoare minimă pentru câmpul de intrare de tip date
+    eventDateInput.setAttribute('min', currentDateString);
+
+
+
+    $(document).ready(function(){
+        // Activarea Slick Carousel pentru containerul caruselului
+        $('.slick-carousel').slick({
+            slidesToShow: 3, // Numărul de elemente afișate pe slide
+            slidesToScroll: 1, // Numărul de elemente de derulat pe slide
+            autoplay: true, // Derulare automată
+            autoplaySpeed: 2000, // Timpul între derulări (milisecunde)
+            arrows: true, // Afișarea săgeților pentru navigare
+            dots: true, // Afișarea punctelor de navigare
+            responsive: [
+                {
+                    breakpoint: 768, // Reacție la rezoluții mai mici sau egale cu 768px
+                    settings: {
+                        slidesToShow: 2 // Numărul de elemente afișate pe slide pentru rezoluții mici
+                    }
+                },
+                {
+                    breakpoint: 480, // Reacție la rezoluții mai mici sau egale cu 480px
+                    settings: {
+                        slidesToShow: 1 // Numărul de elemente afișate pe slide pentru rezoluții foarte mici
+                    }
+                }
+            ]
+        });
+    });
+
+    window.addEventListener('scroll', function() {
+        var navBar = document.querySelector('nav');
+        var navHeight = navBar.offsetHeight; // Înălțimea barei de navigare
+
+        if (window.pageYOffset >= navHeight) {
+            // Dacă s-a depășit înălțimea barei de navigare, adaugă clasa care va face bara de navigare fixată
+            navBar.classList.add('fixed-nav');
+        } else {
+            // Dacă nu, elimină clasa pentru a reveni la aspectul inițial
+            navBar.classList.remove('fixed-nav');
+        }
+    });
+
+</script>
 </body>
 </html>

@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Volunteer Registration</title>
     <link rel="stylesheet" href="/static/css/register_volunteer.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const registrationForm = document.getElementById('registrationForm');
@@ -12,11 +15,41 @@
             const successElement = document.getElementById('successMessage');
             const redirectElement = document.getElementById('redirectMessage'); // Element pentru mesajul de redirecționare
 
+            // Definirea funcției togglePasswordVisibility în cadrul funcției DOMContentLoaded
+            const togglePasswordVisibility = function (input, toggleIcon) {
+                input.type = input.type === 'password' ? 'text' : 'password';
+                toggleIcon.classList.toggle('fa-eye');
+                toggleIcon.classList.toggle('fa-eye-slash');
+            };
+
+            // Adăugarea evenimentului pentru pictograma de afișare/ascundere a parolei în cadrul funcției DOMContentLoaded
+            const passwordToggle = document.getElementById('passwordToggle');
+            const repeatPasswordToggle = document.getElementById('repeatPasswordToggle');
+
+            passwordToggle.addEventListener('click', function () {
+                const passwordInput = document.getElementById('password');
+                togglePasswordVisibility(passwordInput, this);
+            });
+
+            repeatPasswordToggle.addEventListener('click', function () {
+                const repeatPasswordInput = document.getElementById('repeatPassword');
+                togglePasswordVisibility(repeatPasswordInput, this);
+            });
+
             registrationForm.addEventListener('submit', function (e) {
                 e.preventDefault();
 
                 // Colectați datele din formular
                 const formData = new FormData(this);
+
+                // Verificați dacă parola și confirmarea parolei sunt egale
+                const password = formData.get('password');
+                const repeatPassword = formData.get('repeatPassword');
+                if (password !== repeatPassword) {
+                    errorElement.textContent = 'Passwords do not match.';
+                    errorElement.style.display = 'block';
+                    return; // Opriți trimiterea formularului dacă parolele nu sunt egale
+                }
 
                 // Ascundeți mesajele existente
                 errorElement.style.display = 'none';
@@ -42,7 +75,7 @@
 
                             setTimeout(function () {
                                 window.location.href = '/volunteers/login';
-                            }, 3000);
+                            }, 1000);
                         } else {
                             errorElement.textContent = data.message;
                             errorElement.style.display = 'block';
@@ -54,8 +87,13 @@
                         errorElement.style.display = 'block';
                     });
             });
-        });
 
+            // Ascundeți mesajele de eroare și succes la clic pe orice loc din pagină
+            document.addEventListener('click', function () {
+                errorElement.style.display = 'none';
+                successElement.style.display = 'none';
+            });
+        });
     </script>
 
 </head>
@@ -77,22 +115,39 @@
         <input type="email" id="email" name="email" required>
 
         <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
+        <div class="password-input-container">
+            <input type="password" id="password" name="password" required>
+            <i class="fas fa-eye" id="passwordToggle"></i>
+        </div>
+
 
         <label for="repeatPassword">Repeat Password:</label>
-        <input type="password" id="repeatPassword" name="repeatPassword" required>
+        <div class="password-input-container">
+            <input type="password" id="repeatPassword" name="repeatPassword" required>
+            <i class="fas fa-eye" id="repeatPasswordToggle"></i>
+        </div>
 
-        <label for="nationality">Nationality:</label>
-        <input type="text" id="nationality" name="nationality" required>
+        <label for="department">Department:</label>
+        <select id="department" name="department" required>
+            <option value="" disabled selected>Select your department</option>
+            <option value="HR">HR</option>
+            <option value="PR">PR</option>
+            <option value="Events">Events</option>
+        </select>
 
+        <label for="section">Section:</label>
+        <select id="section" name="section" required>
+            <option value="" disabled selected>Select your section</option>
+            <option value="ESN Poli">ESN Poli</option>
+            <option value="ESN UniBucharest">ESN UniBucharest</option>
+            <option value="ESN ASE CMP-Bucharest">ESN ASE CMP-Bucharest</option>
+        </select>
         <button type="submit">Register</button>
         <!-- Mesaje de eroare și succes -->
-
+        <p id="errorMessage" class="message error" style="color: red; display: none;"></p>
+        <p id="successMessage" class="message success" style="color: green; display: none;"></p>
+        <p id="redirectMessage" class="message success" style="color: green; display: none;"></p>
     </form>
-    <p id="errorMessage" class="message error" style="color: red; display: none;"></p>
-    <p id="successMessage" class="message success" style="color: green; display: none;"></p>
-    <p id="redirectMessage" class="message success" style="color: green; display: none;"></p>
-
 </div>
 </body>
 </html>

@@ -3,25 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
-    <link rel="stylesheet" href="/static/css/login_volunteer.css">
+    <title>Volunteer Login</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/login_volunteer.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const loginForm = document.getElementById('loginForm');
+            const errorElement = document.getElementById('errorMessage');
+            const successElement = document.getElementById('successMessage');
+            const redirectElement = document.getElementById('redirectMessage'); // Element pentru mesajul de redirecționare
+
+            loginForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                // Colectați datele din formular
+                const formData = new FormData(this);
+
+                // Ascundeți mesajele existente
+                errorElement.style.display = 'none';
+                successElement.style.display = 'none';
+                redirectElement.style.display = 'none'; // Ascundeți mesajul de redirecționare
+
+                // Trimiteți datele către server
+                fetch('/volunteers/login', {
+                    method: 'POST',
+                    body: formData,
+                })
+                    .then(response => response.json()) // Aici parsează răspunsul ca JSON
+                    .then(data => {
+                        if (data.success) {
+                            successElement.textContent = data.message;
+                            successElement.style.display = 'block';
+
+                            // Afișați mesajul de redirectionare dacă există
+                            if (data.redirectMessage) {
+                                redirectElement.textContent = data.redirectMessage;
+                                redirectElement.style.display = 'block';
+                            }
+
+                            setTimeout(function () {
+                                window.location.href = '/volunteers/home';
+                            }, 1000);
+                        } else {
+                            errorElement.textContent = data.message;
+                            errorElement.style.display = 'block';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        errorElement.textContent = 'An error occurred. Please try again.';
+                        errorElement.style.display = 'block';
+                    });
+            });
+        });
+
+    </script>
 </head>
 <body>
 <div class="login-container">
     <h2>Login</h2>
     <form action="/login" method="post" id="loginForm">
         <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
+        <input type="text" id="username" name="username" required="required">
 
         <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-
-        <!-- Afișează mesajul de eroare -->
-        <p th:if="${errorMessage}" class="error-message" style="color: red;">${errorMessage}</p>
+        <input type="password" id="password" name="password" required="required">
 
         <button type="submit">Login</button>
     </form>
     <p>Nu ai un cont? <a href="/volunteers/register">Înregistrează-te aici</a></p>
+    <p id="errorMessage" class="message error" style="color: red; display: none;"></p>
+    <p id="successMessage" class="message success" style="color: green; display: none;"></p>
+    <p id="redirectMessage" class="message success" style="color: green; display: none;"></p>
 </div>
 </body>
 </html>
