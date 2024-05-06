@@ -24,7 +24,8 @@
             <h6>app</h6>
         </div>
 
-        <div class="nav-links"> <!-- Adăugăm un container pentru link-uri -->
+
+        <div class="nav-links "> <!-- Adăugăm un container pentru link-uri -->
             <ul>
                 <li><a href="#">ESNcard</a></li>
 
@@ -56,6 +57,10 @@
                 </li>
             </ul>
         </div>
+        <!-- Butonul de tip hamburger -->
+        <div class="menu-toggle">
+            <i class="fas fa-bars"></i>
+        </div>
     </nav>
 </header>
 
@@ -72,9 +77,10 @@
     <!-- Secțiunea de evenimente -->
     <section class="events">
         <h2>Upcoming Events</h2>
+        <!-- Textul care va fi afișat când nu există evenimente -->
         <div class="container">
             <!-- Container pentru caruselul Slick -->
-            <div class="slick-carousel">
+            <div class="slick-carousel" th:if="${not #lists.isEmpty(upcomingEvents)}">
                 <!-- Iterăm prin lista evenimentelor viitoare și le afișăm -->
                 <div th:each="event : ${upcomingEvents}" class="event">
                     <div class="event-background">
@@ -99,10 +105,12 @@
                     </div>
                 </div>
             </div>
+            <!-- Textul care va fi afișat când nu există evenimente -->
+            <div class="no-events-message" th:unless="${not #lists.isEmpty(upcomingEvents)}">No upcoming events available.</div>
         </div>
-        <!-- Adaugă săgeți de navigare aici -->
-        <button class="slick-prev">Previous</button>
-        <button class="slick-next">Next</button>
+            <!-- Adaugă săgeți de navigare aici -->
+            <button class="slick-prev">Previous</button>
+            <button class="slick-next">Next</button>
     </section>
 
 
@@ -131,10 +139,13 @@
                 </div>
             </div>
         </div>
+        <!-- Textul care va fi afișat când nu există evenimente -->
+        <p class="no-events-message" th:if="${#lists.isEmpty(pastEvents)}">No past events available.</p>
     </section>
     <section class="esn-card">
         <h2>ESNcard</h2>
         <!-- Aici poți afișa informații despre ESN Card -->
+        <p class="no-events-message" >No information available</p>
     </section>
 </main>
 <footer>
@@ -210,6 +221,28 @@
 </div>
 
 <script>
+
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
+
+        menuToggle.addEventListener('click', function () {
+            navLinks.classList.toggle('active'); // Togglează clasa 'active' pentru meniul de navigare
+        });
+
+        // Adaugăm funcționalitate pentru închiderea meniului când se face clic pe un element de navigare
+        const navItems = document.querySelectorAll('.nav-links ul li');
+        navItems.forEach(function (item) {
+            item.addEventListener('click', function () {
+                navLinks.classList.remove('active'); // Închide meniul
+            });
+        });
+    });
+
+
+
     // Ascultă evenimentul de schimbare a valorii în câmpul de încărcare a imaginii
     document.getElementById('backgroundImage').addEventListener('change', function() {
         // Obține imaginea încărcată
@@ -380,18 +413,18 @@
         });
     });
 
-    window.addEventListener('scroll', function() {
-        var navBar = document.querySelector('nav');
-        var navHeight = navBar.offsetHeight; // Înălțimea barei de navigare
-
-        if (window.pageYOffset >= navHeight) {
-            // Dacă s-a depășit înălțimea barei de navigare, adaugă clasa care va face bara de navigare fixată
-            navBar.classList.add('fixed-nav');
-        } else {
-            // Dacă nu, elimină clasa pentru a reveni la aspectul inițial
-            navBar.classList.remove('fixed-nav');
-        }
-    });
+    // window.addEventListener('scroll', function() {
+    //     var navBar = document.querySelector('nav');
+    //     var navHeight = navBar.offsetHeight; // Înălțimea barei de navigare
+    //
+    //     if (window.pageYOffset >= navHeight) {
+    //         // Dacă s-a depășit înălțimea barei de navigare, adaugă clasa care va face bara de navigare fixată
+    //         navBar.classList.add('fixed-nav');
+    //     } else {
+    //         // Dacă nu, elimină clasa pentru a reveni la aspectul inițial
+    //         navBar.classList.remove('fixed-nav');
+    //     }
+    // });
 
 </script>
 </body>
