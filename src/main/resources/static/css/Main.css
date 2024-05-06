@@ -76,7 +76,7 @@ nav ul li a:active {
 }
 
 .logo img {
-    height: 60px;
+    height: 70px;
 }
 
 .user-profile {
@@ -258,7 +258,7 @@ a {
 /* Stilizare secțiuni principale */
 main {
     max-width: 1200px;
-    margin: 20px auto;
+    margin: 80px auto;
     padding: 20px; /* Ajustează padding-ul pentru a asigura o distanță între conținut și marginea imaginii de fundal */
     background-color: white;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Umbra pentru secțiunea principală */
@@ -276,10 +276,10 @@ footer {
     text-align: center;
     padding: 10px 0;
     box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.1); /* Umbra pentru subsol */
-    position: fixed; /* Fixează footer-ul */
-    bottom: 0; /* Plasează footer-ul în partea de jos a paginii */
     width: 100%; /* Asigură o lățime de 100% pentru footer */
 }
+
+
 
 .footer-links a {
     color: black;
@@ -499,22 +499,27 @@ label[for="backgroundImage"] {
 }
 
 .container1 {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between; /* Aliniază evenimentele la marginile exterioare ale containerului */
+    justify-content: space-between;
 }
 
+
 .event1 {
-    flex: 0 0 calc(33.33% - 20px); /* Setează lățimea flexibilă pentru a afișa trei evenimente pe linie */
-    max-width: calc(33.33% - 20px); /* Setează lățimea maximă pentru a asigura că toate evenimentele au aceeași lățime */
+    flex: 0 0 calc(33.33% - 20px);
+    max-width: calc(33.33% - 20px);
     height: auto;
-    margin-bottom: 20px; /* Adaugă spațiu între rânduri */
+    margin-bottom: 20px;
     border: 1px solid #ddd;
     border-radius: 5px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
     overflow: hidden;
-    background-color: #fff; /* Fundal alb pentru fiecare eveniment */
+    background-color: white;
 }
+
 
 .event-background1 {
     height: 200px;
@@ -522,6 +527,7 @@ label[for="backgroundImage"] {
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
 }
+
 
 .event-background1 img {
     width: 100%;
@@ -540,6 +546,119 @@ label[for="backgroundImage"] {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+
+
+.no-events-message {
+    text-align: center;
+    font-size: 30px;
+    color: #666; /* Culorea gri pentru text */
+    margin-top: 20px;
+}
+
+.events, .events1, .esn-card {
+    padding-bottom: 20px; /* Adaugăm un spațiu între secțiuni */
+}
+
+/* Adăugați alte stiluri pentru detalii, cum ar fi iconițe, etc., după nevoie */
+
+
+/* Stiluri pentru butonul de tip hamburger */
+.menu-toggle {
+    display: none; /* Butonul de tip hamburger este ascuns pe ecranele mai mari */
+    cursor: pointer;
+    font-size: 1.5rem; /* Dimensiunea iconiței */
+    color: black; /* Culoarea iconiței */
+    position: absolute;
+    top: 50%;
+    right: 2rem; /* Ajustează poziția butonului în raport cu bara de navigare */
+    transform: translateY(-50%);
+    z-index: 1000;
+}
+
+
+.menu-toggle i {
+    transition: transform 0.3s ease; /* Efect de tranziție pentru iconița butonului */
+}
+
+/* Rotirea iconiței butonului de tip hamburger când meniul este deschis */
+.nav-links.active .menu-toggle i {
+    transform: rotate(90deg);
+}
+
+/* Stiluri pentru meniul de navigare pe ecranele mai mici */
+@media screen and (max-width: 768px) {
+    .menu-toggle {
+        display: block; /* Afișează butonul de tip hamburger pe ecranele mai mici */
+    }
+
+    .nav-links {
+        display: none; /* Meniul de navigare este ascuns inițial pe ecranele mai mici */
+        position: absolute;
+        top: 100%; /* Plasează meniul sub iconița hamburger */
+        left: 0;
+        width: 100%; /* Asigură că meniul ocupă întreaga lățime */
+        background-color: white; /* Culorile de fundal și text */
+        padding: 20px; /* Adaugă spațiere între elementele meniului */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adaugă umbra */
+        z-index: 999; /* Asigură afișarea meniului peste tot */
+        text-align: center; /* Centrează textul */
+    }
+
+    .nav-links.active {
+        display: block; /* Afișează meniul de navigare când este activat */
+    }
+
+    .nav-links ul {
+        list-style: none; /* Elimină marcatorul de listă */
+        padding: 0;
+        margin: 0;
+        flex-direction: column; /* Schimbă direcția elementelor în coloană */
+    }
+
+    .nav-links ul li {
+        text-align: center;
+        margin-bottom: 10px;
+        position: relative;
+    }
+
+    .nav-links ul li a {
+        display: flex; /* Utilizează display flex pentru a alinia elementele pe mijloc */
+        justify-content: center; /* Aliniază elementele pe orizontală pe mijloc */
+        align-items: center; /* Aliniază elementele pe verticală pe mijloc */
+        padding: 10px 0; /* Adaugă spațiere între text și margini */
+        color: black; /* Culoarea textului */
+        font-weight: bold;
+        text-decoration: none; /* Elimină sublinierea */
+        transition: background-color 0.3s; /* Efect de tranziție */
+    }
+
+    .nav-links ul li a:hover {
+        background-color: #00AEEF; /* Schimbă culoarea de fundal la hover */
+    }
+
+    .nav-links ul li:hover .dropdown-content {
+        display: block;
+        position: static; /* Schimbăm poziția submenu-ului la static pentru a îl afișa corect pe ecranele mici */
+        width: 100%; /* Asigurăm că submenu-ul ocupă întreaga lățime */
+        margin-top: 10px; /* Adăugăm un spațiu între elementul părinte și submenu */
+        border-radius: 0; /* Eliminăm orice bordură rotunjită */
+        box-shadow: none; /* Eliminăm umbra */
+    }
+
+    .nav-links ul li:hover .dropdown-content a {
+        display: block;
+        text-align: center; /* Centrăm textul în submenu */
+    }
+
+
+    /* Elimină spațiul între elementele meniului */
+    .nav-links ul li:not(:last-child) {
+        margin-bottom: 0; /* Elimină margin-bottom pentru toate elementele meniului, cu excepția ultimului */
+    }
+
+}
+
 
 
 
