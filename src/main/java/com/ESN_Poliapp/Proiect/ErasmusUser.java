@@ -33,6 +33,9 @@ public class ErasmusUser {
     @Column(name = "receiving_university")
     private String receivingUniversity;
 
+    @Column(name = "profile_picture")
+    private byte[] profilePicture;
+
     // Constructori
 
     public ErasmusUser() {
@@ -122,6 +125,14 @@ public class ErasmusUser {
 
     public void setReceivingUniversity(String receivingUniversity) {
         this.receivingUniversity = receivingUniversity;
+    }
+
+    public byte[] getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(byte[] profilePicture) {
+        this.profilePicture = profilePicture;
     }
 }
 

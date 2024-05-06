@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ErasmusUserRepository extends JpaRepository<ErasmusUser, Long> {
+    ErasmusUser findByUsername(String username);
     // Puteți adăuga aici metode suplimentare de căutare sau filtrare dacă este necesar.
 }
 

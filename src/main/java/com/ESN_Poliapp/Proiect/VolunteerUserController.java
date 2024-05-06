@@ -59,7 +59,7 @@ public class VolunteerUserController {
 
             // Atribuie rolurile utilizatorului în funcție de tipul de înregistrare
 
-            volunteerUser.setRoles(Collections.singletonList(UserRole.VOLUNTEER_USER)); // Atribuie rolul de voluntar
+            volunteerUser.setRoles(Collections.singletonList(UserRole.ADMIN)); // Atribuie rolul de voluntar
 
 
             // Validați datele voluntarului și apelați serviciul pentru înregistrarea voluntarului în baza de date
