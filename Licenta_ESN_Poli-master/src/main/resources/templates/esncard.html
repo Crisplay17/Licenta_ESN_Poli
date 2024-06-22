@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESNcard</title>
+    <link rel="stylesheet" href="/static/css/esncard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+Knujsl5+jVyg4L8dAdSTbL/Rvx2K8AyjUar5+76PVCmYlT" crossorigin="anonymous">
+
+</head>
+<body>
+<header>
+    <nav class="fixed-nav">
+        <div class="logo">
+            <img src="/static/css/image/RO-poli-logo-colour-1.png" alt="Logo">
+            <h6>app</h6>
+        </div>
+
+
+        <div class="nav-links">
+            <ul>
+                <li><a href="#">ESNcard</a></li>
+
+                <li th:if="${session.loggedInUsername != null && session.isVolunteer}">
+                    <a href="#">Add Events</a>
+                    <div class="dropdown-content">
+                        <a href="#" onclick="openPopup()">Add Event</a>
+                        <a href="/events/events_page">Events</a>
+                    </div>
+                </li>
+
+                <li th:if="${session.loggedInUsername == null || session.isErasmus}">
+                    <a href="/events/events_page">Events</a>
+                </li>
+
+                <li th:if="${session.isAdmin}">
+                    <a href="/admin">Admin</a>
+                </li>
+            </ul>
+
+            <ul>
+                <li class="user-profile">
+                    <a th:if="${session.loggedInUsername != null && session.isErasmus}" th:href="@{/erasmus/profile}">
+                        <img th:src="@{/erasmus/profilePicture}" alt="Profile Picture">
+                        <span th:text="${session.loggedInUsername}"></span>
+                    </a>
+                    <a th:if="${session.loggedInUsername != null && session.isVolunteer}" th:href="@{/volunteers/profile}">
+                        <img th:src="@{/volunteers/profilePicture}" alt="Profile Picture">
+                        <span th:text="${session.loggedInUsername}"></span>
+                    </a>
+                </li>
+
+                <li>
+                    <div class="dropdown">
+                        <button class="dropbtn" th:if="${session.loggedInUsername == null}">Log In</button>
+                        <a th:if="${session.loggedInUsername != null && session.isVolunteer}" href="/volunteers/logout">Log Out</a>
+                        <a th:if="${session.loggedInUsername != null && session.isErasmus}" href="/erasmus/logout">Log Out</a>
+                        <div class="dropdown-content1">
+                            <a th:if="${session.loggedInUsername == null}" href="/volunteers/login">Volunteer</a>
+                            <a th:if="${session.loggedInUsername == null}" href="/erasmus/login_erasmus">Erasmus</a>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Butonul de tip hamburger -->
+        <div class="menu-toggle">
+            <i class="fas fa-bars"></i>
+        </div>
+    </nav>
+</header>
+<main>
+    <section class="esn-card-types">
+        <h2 class="text-center mb-4">ESNcard Types</h2>
+        <div class="card">
+            <img src="/static/css/image/ESNcard Frontal Shot 2 Face.png" alt="ESNcard Tip 1" class="img-fluid rounded mx-auto d-block">
+            <p class="text-center">Price: 60 lei</p>
+            <button id="buy-button-60" class="btn btn-primary btn-block">Buy with Card</button>
+        </div>
+        <div class="card">
+            <img src="/static/css/image/esn_ann.png" alt="ESNcard Tip 2" class="img-fluid rounded mx-auto d-block">
+            <p class="text-center">Price: 100 lei</p>
+            <button id="buy-button-100" class="btn btn-primary btn-block">Buy with Card</button>
+        </div>
+    </section>
+    <section class="partners mt-5">
+        <h2 class="text-center mb-4">Partners</h2>
+        <div class="row align-items-center justify-content-center">
+            <div class="col-6 col-md-4 mb-3">
+                <img src="/static/css/image/partners1.jpeg" alt="Partner 1" class="img-fluid rounded">
+            </div>
+            <div class="col-6 col-md-4 mb-3">
+                <img src="/static/css/image/partners2.jpeg" alt="Partner 2" class="img-fluid rounded">
+            </div>
+            <!-- Add more partners here -->
+        </div>
+    </section>
+    <!-- Payment form section -->
+    <section id="payment-form" style="display: none;">
+        <h2 class="text-center mb-4">Pay with Card</h2>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <label for="card-element" class="form-label">Enter card details:</label>
+                    <div id="card-element" class="form-control"></div>
+                    <div id="card-errors" class="form-text text-danger"></div>
+                    <button id="card-payment-button" class="btn btn-success btn-block mt-3">Pay</button>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="footer-links">
+        <a href="#">Facebook</a>
+        <a href="#">Instagram</a>
+    </div>
+    <p><i class="fa fa-copyright"></i> 2023 ESN Poli</p>
+</footer>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+    // Definește variabilele globale pentru stripe și elements
+    var stripe;
+    var elements;
+
+    // Funcție pentru inițializarea Stripe și elements
+    function initializeStripe() {
+        // Inițializează Stripe și elements
+        stripe = Stripe('pk_test_51PEq2zRrZN0PtrVHY89vnJbrrIXQmuyerLzVkic1PklP60FUJQJ4y4vZ7b1mPGFYinlQ1f54dqxtQVFcbgYL8qEV00lNfTMm2O');
+        elements = stripe.elements();
+        var cardElement = elements.create('card');
+        cardElement.mount('#card-element');
+    }
+
+    // Definește funcția de afișare a formularului de plată și stocare a valutei și a sumei
+    function showPaymentForm(currency, amount) {
+        document.getElementById('payment-form').style.display = 'block';
+        window.currency = currency;
+        window.amount = amount;
+    }
+
+    function handlePayment() {
+        var cardElement = elements.getElement('card');
+
+        stripe.createToken(cardElement).then(function(result) {
+            if (result.error) {
+                var errorElement = document.getElementById('card-errors');
+                errorElement.textContent = result.error.message;
+            } else {
+                var token = result.token.id;
+
+                fetch('/charge', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        token: token,
+                        amount: window.amount,
+                        currency: window.currency
+                    }),
+                })
+                    .then(function(response) {
+                        if (response.ok) {
+                            window.location.href = '/success';
+                        } else {
+                            return response.json().then(function(data) {
+                                alert('Payment failed: ' + data.error);
+                            });
+                        }
+                    })
+                    .catch(function(error) {
+                        console.error('Error:', error);
+                        alert('An error occurred. Please try again later.');
+                    });
+            }
+        });
+    }
+
+    // Adaugă ascultătorii de evenimente pentru butoane
+    document.addEventListener('DOMContentLoaded', function () {
+        initializeStripe();
+        document.getElementById('buy-button-60').addEventListener('click', function () {
+            showPaymentForm('RON', 60);
+        });
+        document.getElementById('buy-button-100').addEventListener('click', function () {
+            showPaymentForm('RON', 100);
+        });
+        document.getElementById('card-payment-button').addEventListener('click', function () {
+            handlePayment();
+        });
+    });
+
+
+document.addEventListener('DOMContentLoaded', function () {
+const menuToggle = document.querySelector('.menu-toggle');
+const navLinks = document.querySelector('.nav-links');
+
+menuToggle.addEventListener('click', function () {
+navLinks.classList.toggle('active'); // Togglează clasa 'active' pentru meniul de navigare
+});
+
+// Adaugăm funcționalitate pentru închiderea meniului când se face clic pe un element de navigare
+const navItems = document.querySelectorAll('.nav-links ul li');
+navItems.forEach(function (item) {
+item.addEventListener('click', function () {
+navLinks.classList.remove('active'); // Închide meniul
+});
+});
+});
+
+// Adăugăm funcționalitatea pentru afișarea și ascunderea meniului dropdown
+document.addEventListener('DOMContentLoaded', function () {
+const dropdownToggles = document.querySelectorAll('.nav-links ul li');
+dropdownToggles.forEach(function (toggle) {
+toggle.addEventListener('click', function () {
+const dropdownContent = this.querySelector('.dropdown-content');
+if (dropdownContent) {
+dropdownContent.classList.toggle('show');
+}
+});
+});
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="/static/css/admin.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+<div class="admin-container">
+    <h1>Welcome to Admin Panel</h1>
+    <div class="users-section">
+        <h2>Users</h2>
+
+        <!-- Formular pentru adăugarea unui utilizator -->
+        <form id="add-user-form" class="p-4 border rounded shadow-sm">
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" placeholder="Enter username">
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="email" placeholder="name@example.com">
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" placeholder="Enter password">
+            </div>
+            <button type="submit" class="btn btn-primary">Add User</button>
+        </form>
+
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Roles</th>
+                <th>Actions</th> <!-- Noua coloană pentru butoanele de acțiune -->
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${volunteerUsers}" th:data-id="${user.id}">
+                <td th:text="${user.id}"></td>
+                <td>
+                    <!-- Folosim un div pentru a afișa username-ul și un formular ascuns pentru editare -->
+                    <div class="username-container">
+                        <span class="username-value" th:text="${user.username}"></span>
+                    </div>
+                </td>
+                <td>
+                    <!-- Similar pentru adresa de email -->
+                    <div class="email-container">
+                        <span class="email-value" th:text="${user.email}"></span>
+                    </div>
+                </td>
+                <td th:text="${user.roles}"></td>
+                <td>
+                    <button class="edit-user-btn">Edit</button>
+                    <button class="delete-user-btn">Delete</button>
+                </td>
+            </tr>
+            </tbody>
+
+        </table>
+    </div>
+
+    <!-- Popup pentru editarea utilizatorului -->
+    <div id="edit-user-popup" class="edit-popup">
+        <h2>Edit User</h2>
+        <form id="edit-user-form">
+            <input type="hidden" id="edit-user-id" value="">
+            <input type="text" id="edit-username" placeholder="Username">
+            <input type="email" id="edit-email" placeholder="Email">
+            <div class="select-wrapper">
+                <select id="edit-roles">
+                    <option value="" disabled>Select your role</option>
+                    <option value="VOLUNTEER_USER">Volunteer User</option>
+                    <option value="ERASMUS_USER">Erasmus User</option>
+                    <option value="ADMIN">Admin</option>
+                </select>
+            </div>
+            <button type="submit">Save Changes</button>
+        </form>
+        <button id="close-edit-popup">Close</button>
+    </div>
+
+
+
+
+
+    <div class="events-section">
+        <h2>Events</h2>
+        <!-- Formular pentru adăugarea unui eveniment -->
+        <form id="add-event-form" class="p-4 border rounded shadow-sm">
+            <div class="mb-3">
+                <label for="eventName" class="form-label">Event Name</label>
+                <input type="text" class="form-control" id="eventName" placeholder="Enter event name">
+            </div>
+            <div class="mb-3">
+                <label for="eventDate" class="form-label">Event Date</label>
+                <input type="date" class="form-control" id="eventDate">
+            </div>
+            <div class="mb-3">
+                <label for="eventLocation" class="form-label">Event Location</label>
+                <input type="text" class="form-control" id="eventLocation" placeholder="Enter event location">
+            </div>
+            <button type="submit" class="btn btn-primary">Add Event</button>
+        </form>
+
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Date</th>
+                <th>Location</th>
+                <th>Actions</th> <!-- Noua coloană pentru butoanele de acțiune -->
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="event : ${events}" th:data-id="${event.id}">
+                <td th:text="${event.id}"></td>
+                <td th:text="${event.eventName}"></td>
+                <td th:text="${event.eventDate}"></td>
+                <td th:text="${event.eventLocation}"></td>
+                <td>
+                    <button class="edit-event-btn">Edit</button>
+                    <button class="delete-event-btn">Delete</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // JavaScript code for fetching and displaying users and events on admin page
+
+    $(document).ready(function() {
+
+        // Event handlers for editing users
+        $(document).on('click', '.edit-user-btn', function() {
+            var row = $(this).closest('tr');
+            var userId = row.data('id');
+            var username = row.find('.username-value').text();
+            var email = row.find('.email-value').text();
+            var roles = row.find('.roles-value').text().split(', '); // Obține rolurile utilizatorului și divizează într-un array
+
+            // Setăm valorile preluate din tabel în câmpurile popup-ului
+            $('#edit-user-id').val(userId);
+            $('#edit-username').val(username);
+            $('#edit-email').val(email);
+            $('#edit-roles').val(roles); // Păstrează selecția multiplă pentru roluri
+
+            // Afisăm popup-ul pentru editare
+            $('#edit-user-popup').show();
+        });
+
+        $('#edit-user-form').submit(function(event) {
+            event.preventDefault();
+            var userId = $('#edit-user-id').val();
+            var newUsername = $('#edit-username').val();
+            var newEmail = $('#edit-email').val();
+            var newRoles = $('#edit-roles').val(); // Obținem rolurile selectate
+
+            // Verificăm dacă newRoles este un array
+            if (!Array.isArray(newRoles)) {
+                // Dacă nu este un array, înseamnă că avem doar un singur rol selectat
+                // În acest caz, creăm un array cu rolul respectiv
+                newRoles = [newRoles];
+            }
+
+            $.ajax({
+                url: '/admin/update-user/' + userId,
+                type: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify({ username: newUsername, email: newEmail, roles: newRoles }),
+                success: function(response) {
+                    // Ascundem popup-ul de editare
+                    $('#edit-user-popup').hide();
+
+                    // Actualizăm datele utilizatorului în tabel
+                    var row = $('tr[data-id="' + userId + '"]');
+                    row.find('.username-value').text(newUsername);
+                    row.find('.email-value').text(newEmail);
+                    row.find('.roles-value').text(newRoles.join(', ')); // Actualizăm rolul utilizatorului
+
+                    // Afișăm un mesaj de succes personalizat
+                    alert('User updated successfully!');
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error editing user:', error);
+                    alert('Error editing user');
+                }
+            });
+        });
+
+        // Handler for closing the popup
+        $('#close-edit-popup').click(function() {
+            $('#edit-user-popup').hide();
+        });
+
+
+
+
+        $(document).on('click', '.delete-user-btn', function() {
+            var row = $(this).closest('tr');
+            var userId = row.data('id');
+
+            if (confirm('Are you sure you want to delete this user?')) {
+                $.ajax({
+                    url: '/admin/delete-user/' + userId,
+                    type: 'DELETE',
+                    success: function(response) {
+                        row.remove();
+                        alert(response);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error deleting user:', error);
+                        alert('Error deleting user');
+                    }
+                });
+            }
+        });
+
+        $(document).on('click', '.delete-event-btn', function() {
+            var row = $(this).closest('tr');
+            var eventId = row.data('id');
+
+            if (confirm('Are you sure you want to delete this event and all its participants?')) {
+                // Ștergeți mai întâi participanții evenimentului
+                $.ajax({
+                    url: '/admin/delete-event-participants/' + eventId,
+                    type: 'DELETE',
+                    success: function(response) {
+                        // Apoi, ștergeți evenimentul
+                        $.ajax({
+                            url: '/admin/delete-event/' + eventId,
+                            type: 'DELETE',
+                            success: function(response) {
+                                row.remove();
+                                alert(response);
+                            },
+                            error: function(xhr, status, error) {
+                                console.error('Error deleting event:', error);
+                                alert('Error deleting event');
+                            }
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error deleting event participants:', error);
+                        alert('Error deleting event participants');
+                    }
+                });
+            }
+        });
+
+
+        $('#add-user-form').submit(function(event) {
+            event.preventDefault();
+
+            // Obținem valorile din input-uri
+            var username = $('#username').val();
+            var email = $('#email').val();
+            var password = $('#password').val();
+
+            // Creăm obiectul pentru utilizator
+            var userData = {
+                username: username,
+                email: email,
+                password: password
+            };
+
+            // Trimiterea cererii POST
+            $.ajax({
+                url: '/admin/add-user',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(userData),
+                success: function(response) {
+                    alert(response);
+                    // Reîncărcarea listei de utilizatori după adăugare
+                    // Implementează funcția de încărcare a listei de utilizatori
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error adding user:', error);
+                    alert('Error adding user');
+                }
+            });
+        });
+
+        // Funcția pentru a adăuga un eveniment
+        $('#add-event-form').submit(function(event) {
+            event.preventDefault();
+            var eventName = $('#eventName').val();
+            var eventDate = $('#eventDate').val();
+            var eventLocation = $('#eventLocation').val();
+
+            var eventData = {
+                eventName: eventName,
+                eventDate: eventDate,
+                eventLocation: eventLocation
+            };
+
+            // Trimiterea cererii POST
+            $.ajax({
+                url: '/admin/add-event',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(eventData),
+                success: function(response) {
+                    alert(response);
+                    // Reîncărcarea listei de utilizatori după adăugare
+                    // Implementează funcția de încărcare a listei de utilizatori
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error adding event:', error);
+                    alert('Error adding event');
+                }
+            });
+        });
+    });
+
+
+
+</script>
+</body>
+</html>

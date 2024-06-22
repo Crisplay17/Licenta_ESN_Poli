@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagina de Autentificare</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+            opacity: 0.7;
+        }
+
+        header {
+            color: #fff;
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 20px;
+            animation: fadeInUp 1s ease;
+            align-items: center;
+            justify-content: center;
+            margin-top: 150px;
+        }
+
+        .auth-button {
+            background-color: #00AEEF;
+            color: #fff;
+            text-decoration: none;
+            padding: 20px 40px;
+            border-radius: 15px;
+            font-weight: bold;
+            text-align: center;
+            transition: background-color 0.3s, transform 0.3s, color 0.3s;
+            animation: slideIn 1s ease;
+        }
+
+        .auth-button:hover {
+            background-color: #2E3192;
+            color: #fff;
+        }
+
+        .auth-button:active {
+            transform: scale(0.95);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(-20px);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+        .or-text {
+            color: #fff;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-container {
+            position: absolute;
+            top: 20px; /* Poziționează logo-ul în partea de sus */
+            left: 20px; /* Poziționează logo-ul în stânga */
+        }
+
+        .logo {
+            width: 150px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <img src="/static/css/image/HiT-2022-ezgif.com-resize.gif">
+
+<header>Your journey starts here!</header>
+<div class="logo-container">
+    <img src="/static/css/image/RO-poli-logo-colour-1.png" alt="Logo" class="logo">
+</div>
+<div class="button-container">
+    <a href="/volunteers/login" class="auth-button">Are you a Volunteer?</a>
+    <div class="or-text">or</div>
+    <a href="/erasmus/login_erasmus" class="auth-button">Are you an Erasmus?</a>
+</div>
+</body>
+</html>

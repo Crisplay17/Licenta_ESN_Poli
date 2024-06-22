@@ -1,0 +1,262 @@
+/* CSS for Admin Panel */
+.admin-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+h1 {
+    text-align: center;
+    font-size: 36px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-size: 24px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background-color: #007bff;
+    color: #fff;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-right: 10px; /* Adăugăm un spațiu între butoane */
+    transition: background-color 0.3s ease;
+}
+
+button:last-child {
+    margin-right: 0; /* Eliminăm spațiul între ultimul buton și marginea dreaptă */
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Responsive Design */
+@media only screen and (max-width: 600px) {
+    .admin-container {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 28px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    button {
+        font-size: 14px;
+        display: block;
+        margin-bottom: 10px; /* Adăugăm spațiu între butoane în modul responsiv */
+        margin-right: 0; /* Eliminăm spațiul între butoane în modul responsiv */
+    }
+
+    button:last-child {
+        margin-bottom: 0; /* Eliminăm spațiul sub ultimul buton în modul responsiv */
+    }
+}
+
+/* Stilizare pop-up de editare a utilizatorului și a butonului de ștergere */
+.edit-popup button[type="submit"],
+.edit-popup button[type="button"],
+.delete-user-btn,
+.delete-event-btn {
+    padding: 10px 20px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.edit-popup button[type="submit"]:hover,
+.edit-popup button[type="button"]:hover,
+.delete-user-btn:hover,
+.delete-event-btn:hover {
+    background-color: #0056b3; /* Schimbăm culoarea butoanelor la hover */
+}
+
+.delete-user-btn,
+.delete-event-btn {
+    background-color: #dc3545; /* Culoarea roșie din Bootstrap pentru butoane de ștergere */
+    color: #fff; /* Textul butonului va fi alb */
+    margin-right: 10px; /* Adăugăm un spațiu între butoane */
+}
+
+.delete-user-btn:last-child,
+.delete-event-btn:last-child {
+    margin-right: 0; /* Eliminăm spațiul între ultimul buton și marginea dreaptă */
+}
+
+/* Stilizare pop-up pentru editarea utilizatorului */
+.edit-popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    z-index: 1000;
+    max-width: 400px;
+    width: 100%;
+}
+
+.edit-popup h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+    text-align: center;
+}
+
+.edit-popup form {
+    margin-bottom: 20px;
+}
+
+.edit-popup input[type="text"],
+.edit-popup input[type="email"],
+.edit-popup select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+}
+
+.edit-popup select {
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.edit-popup button[type="submit"],
+.edit-popup button#close-edit-popup {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+.edit-popup button[type="submit"]:hover,
+.edit-popup button#close-edit-popup:hover {
+    background-color: #0056b3;
+}
+
+.edit-popup button#close-edit-popup {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.edit-popup button#close-edit-popup:hover {
+    background-color: #c82333;
+}
+
+/* Stilizare pentru butonul "Close" al pop-up-ului de editare */
+#close-edit-popup {
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+#close-edit-popup:hover {
+    background-color: #c82333;
+}
+
+/* Stilizare pentru tabelul de evenimente */
+.events-section table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.events-section th,
+.events-section td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.events-section th {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.events-section tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* Stilizare pentru butoanele de acțiune din tabelul de evenimente */
+.events-section .edit-event-btn,
+.events-section .delete-event-btn {
+    padding: 10px 20px;
+    margin-right: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.events-section .edit-event-btn:hover,
+.events-section .delete-event-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Stilizare pentru butonul de ștergere din tabelul de evenimente */
+.events-section .delete-event-btn {
+    padding: 10px 20px;
+    margin-right: 10px;
+    background-color: #dc3545; /* Culoarea roșie */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.events-section .delete-event-btn:hover {
+    background-color: #c82333; /* Culoarea roșie la hover */
+}

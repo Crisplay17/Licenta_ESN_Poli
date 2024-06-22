@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Details</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/events_page.css">
+    <style>
+        /* Stilizare specifică pentru pagina de detalii */
+        body {
+            font-family: 'Lato', sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #2E3192;
+            color: #fff;
+            padding: 40px 0;
+            text-align: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000; /* Asigurăm că este deasupra tuturor celorlalte elemente */
+        }
+
+        .event-name {
+            font-size: 24px;
+            margin: 50px;
+            overflow: hidden; /* Ascunde textul care depășește lățimea */
+            text-overflow: ellipsis; /* Afiseaza puncte de suspensie daca textul depaseste latimea */
+            white-space: nowrap; /* Textul nu va fi impartit la spatiile albe */
+        }
+
+        .event-details-container {
+            max-width: 1000px;
+            margin: 100px auto 30px; /* Adaugă un spațiu între header și container */
+            padding: 30px;
+            width: 90%;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .event-details {
+            padding: 20px;
+            border-bottom: 1px solid #ccc;
+            flex: 1;
+            max-width: 100%;
+            overflow: hidden;
+        }
+
+        .event-details p {
+            max-width: 100%;
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #666;
+        }
+        .event-details p:first-child {
+            margin-top: 0; /* Elimină margin-top pentru primul element <p> din .event-details */
+        }
+
+        .event-details h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+
+        .event-details pre {
+            max-width: 100%;
+            overflow: auto; /* Ascunderea barei de derulare verticale */
+            white-space: pre-wrap; /* Prevenirea tăierii textului și împărțirea cuvintelor la dimensiunea ferestrei */
+            word-wrap: break-word; /* Împărțirea cuvintelor în cazul în care acestea sunt mai mari decât lățimea containerului */
+            max-height: 200px; /* Specificați înălțimea maximă dorită pentru afișarea completă a textului */
+        }
+
+
+
+
+        .event-details p strong {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .participants, .participant-count {
+            font-size: 18px;
+            font-weight: bold;
+            background-color: #2E3192;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            display: inline-block;
+            z-index: 1; /* Asigurați-vă că este deasupra restului conținutului */
+            animation: scaleUp 0.5s ease-in-out;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis; /* Afiseaza puncte de suspensie daca textul depaseste latimea maxima */
+            white-space: nowrap; /* Textul nu va fi impartit la spatiile albe */
+        }
+
+        .participants-list {
+            margin-top: 30px;
+        }
+
+        .participants-list h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .participant {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .participant img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .participant-name {
+            font-size: 18px;
+            color: #666;
+        }
+
+        @keyframes scaleUp {
+            0% {
+                transform: scale(0.8);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        /* Stilizare pentru dispozitive mici */
+        @media screen and (max-width: 768px) {
+            .event-details-container {
+                width: 80%; /* Ajustarea lățimii pentru dispozitivele mai mici */
+            }
+        }
+        .background-video {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            background-size: cover;
+            transition: opacity 2s;
+            opacity: 0.6; /* Opacitatea video-ului */
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- Background Video -->
+<video autoplay muted class="background-video">
+    <source src="/static/css/image/details.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
+<header>
+    <h1 class="event-name" th:text="${event.eventName}"></h1>
+</header>
+<div class="event-details-container">
+    <div class="event-details">
+        <h2><i class="fas fa-calendar-alt"></i> Event Details</h2>
+<!--        <p><strong>Name:</strong> <span th:text="${event.eventName}"></span></p>-->
+        <p><strong>Date:</strong> <span th:text="${#dates.format(event.eventDate, 'dd-MM-yyyy')}"></span></p>
+        <p><strong>Location:</strong> <span th:text="${event.eventLocation}"></span></p>
+        <p><strong>Cause:</strong> <span th:text="${event.eventCause}"></span></p>
+        <div class="participants"><strong>Total Participants:</strong> <span  th:text="${event.eventParticipants}"></span></div>
+        <span class="participant-count" id="participant-count" th:text="${'Joined Participants: ' + event.participants.size()}"></span>
+        <p><strong>Description</strong></p>
+        <pre><span th:text="${event.eventDescription}"></span></pre>
+        <p><strong>Goal:</strong> <span th:text="${event.eventGoal}"></span></p>
+    </div>
+    <div class="participants-list">
+        <h3>Registered Participants:</h3>
+        <div th:each="participant : ${event.participants}" class="participant">
+            <img th:src="${participant.profilePicture}" alt="Profile Picture">
+            <span class="participant-name" th:text="${participant.firstName + ' ' + participant.lastName}"></span>
+        </div>
+        <div th:each="participant : ${event.erasmusParticipants}" class="participant">
+            <img th:src="${participant.profilePicture}" alt="Profile Picture">
+            <span class="participant-name" th:text="${participant.firstName + ' ' + participant.lastName}"></span>
+        </div>
+    </div>
+
+</div>
+
+
+</body>
+</html>

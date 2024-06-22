@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/user_profile.css"> <!-- Fișierul CSS pentru stilizare -->
+    <style>
+        /* Stiluri suplimentare pentru buton */
+        .center1 {
+            text-align: center; /* Aliniere buton în centru */
+        }
+
+        .btn-submit1 {
+            margin-top: 4px; /* Spațierea deasupra a butonului */
+            padding: 5px 10px; /* Dimensiunea butonului */
+            font-size: 16px; /* Dimensiunea textului */
+        }
+        .error-message {
+            color: red; /* Culorea textului de eroare */
+            text-align: center;
+        }
+        .success-message {
+            color: green; /* Culorea textului de eroare */
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>User Profile</h2>
+    <!-- Formularul pentru utilizatorii de tip voluntar -->
+    <form th:if="${session.isVolunteer}" action="/volunteers/profilePicture" method="post" enctype="multipart/form-data" class="profile-form">
+        <div class="user-profile">
+            <img id="profile-picture" th:src="@{/volunteers/profilePicture}" alt="Profile Picture" >
+            <div class="overlay">
+                <label for="profilePicture" class="custom-file-upload">
+                    <i class="fa fa-cloud-upload"></i> Upload New Picture
+                </label>
+                <input type="file" id="profilePicture" name="profilePicture" accept="image/*">
+            </div>
+        </div>
+        <div class="center1"> <!-- Container pentru alinierea butonului -->
+            <button  type="submit"  class="btn-submit1">Save Image</button>
+        </div>
+        <p class="error-message" id="error-message"></p>
+        <p class="success-message" id="success-message"></p>
+    </form>
+
+    <!-- Formularul pentru utilizatorii de tip Erasmus -->
+    <form th:if="${session.isErasmus}" action="/erasmus/profilePicture" method="post" enctype="multipart/form-data" class="profile-form1">
+        <div class="user-profile">
+            <img id="profile-picture1" th:src="@{/erasmus/profilePicture}" alt="Profile Picture" >
+            <div class="overlay">
+                <label for="profilePicture1" class="custom-file-upload">
+                    <i class="fa fa-cloud-upload"></i> Upload New Picture
+                </label>
+                <input type="file" id="profilePicture1" name="profilePicture" accept="image/*">
+            </div>
+        </div>
+        <div class="center1"> <!-- Container pentru alinierea butonului -->
+            <button  type="submit"  class="btn-submit1">Save Image</button>
+        </div>
+        <p class="error-message" id="error-message1"></p>
+        <p class="success-message" id="success-message1"></p>
+    </form>
+
+    <form th:if="${session.isVolunteer}" action="/volunteers/profile" method="post"  enctype="multipart/form-data" class="profile-form">
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" th:value="${user.username}" readonly>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" th:value="${user.email}" readonly>
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" th:value="${user.password}" readonly>
+        </div>
+        <div class="form-group">
+            <label for="nationality">Nationality:</label>
+            <input type="text" id="nationality" name="nationality" th:value="${user.nationality} " readonly>
+        </div>
+        <div class="form-group">
+            <label for="section">Section:</label>
+            <input type="text" id="section" name="section" th:value="${user.section} " readonly>
+        </div>
+        <div class="form-group">
+            <label for="department">Department:</label>
+            <input type="text" id="department" name="department" th:value="${user.department} " readonly>
+        </div>
+        <!-- Buton pentru salvarea modificărilor -->
+        <div class="center">
+            <button type="submit"  class="btn-submit">Save Changes</button>
+
+        </div>
+    </form>
+
+    <form th:if="${session.isErasmus}" action="/erasmus/profile" method="post" enctype="multipart/form-data" class="profile-form1">
+        <!-- Câmpurile și acțiunile specifice erasmus -->
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username1" name="username" th:value="${user.username}" readonly>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email1" name="email" th:value="${user.email}" readonly>
+        </div>
+        <div class="form-group">
+            <label for="password">New Password:</label>
+            <input type="password" id="password1" name="password" th:value="${user.password}" readonly>
+        </div>
+        <div class="form-group">
+            <label for="nationality">Nationality:</label>
+            <input type="text" id="nationality1" name="nationality" th:value="${user.nationality}" readonly>
+        </div>
+        <div class="form-group">
+            <label for="host_university">Host University:</label>
+            <input type="text" id="host_university" name="host_university" th:value="${user.hostUniversity}" readonly>
+        </div>
+        <div class="form-group">
+            <label for="receiving_university">Nationality:</label>
+            <input type="text" id="receiving_university" name="receiving_university" th:value="${user.receivingUniversity}" readonly>
+        </div>
+        <!-- Buton pentru salvarea modificărilor -->
+        <div class="center">
+            <button type="submit"  class="btn-submit">Save Changes</button>
+
+        </div>
+    </form>
+</div>
+<!-- Afișarea evenimentelor la care a participat utilizatorul -->
+<h3>Participated at these events:</h3>
+<ul>
+    <li th:each="event : ${user.events}">
+        <span th:text="${event.eventName}"></span> - <span th:text="${event.eventDate}"></span>
+    </li>
+</ul>
+
+<!--&lt;!&ndash; Afișarea evenimentelor create de utilizator &ndash;&gt;-->
+<!--<h3>Created Events:</h3>-->
+<!--<ul>-->
+<!--    <li th:each="event : ${createdEvents}">-->
+<!--        <span th:text="${event.eventName}"></span> - <span th:text="${event.eventDate}"></span>-->
+<!--    </li>-->
+<!--</ul>-->
+
+<script>
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var form = document.querySelector('.profile-form');
+        if (form) {
+            form.onsubmit = function() {
+                return validateForm();
+            };
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var form = document.querySelector('.profile-form1');
+        if (form) {
+            form.onsubmit = function() {
+                return validateForm1();
+            };
+        }
+    });
+
+    document.getElementById('profilePicture').addEventListener('change', function () {
+        var file = this.files[0];
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById('profile-picture').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    document.getElementById('profilePicture1').addEventListener('change', function () {
+        var file = this.files[0];
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById('profile-picture1').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    function validateForm() {
+        var fileInput = document.getElementById('profilePicture');
+        if (fileInput.files.length === 0) {
+            var errorMessage = document.getElementById('error-message');
+            errorMessage.textContent = "Please select an image.";
+            setTimeout(function() {
+                errorMessage.textContent = "";
+            }, 3000);
+            return false;
+        } else {
+            var successMessage = document.getElementById('success-message');
+            successMessage.textContent = "Image uploaded successfully.";
+            setTimeout(function() {
+                successMessage.textContent = "";
+            }, 2000);
+            return true;
+        }
+    }
+
+    function validateForm1() {
+        var fileInput = document.getElementById('profilePicture1');
+        if (fileInput.files.length === 0) {
+            var errorMessage = document.getElementById('error-message1');
+            errorMessage.textContent = "Please select an image.";
+            setTimeout(function() {
+                errorMessage.textContent = "";
+            }, 3000);
+            return false;
+        } else {
+            var successMessage = document.getElementById('success-message1');
+            successMessage.textContent = "Image uploaded successfully.";
+            setTimeout(function() {
+                successMessage.textContent = "";
+            }, 2000);
+            return true;
+        }
+    }
+
+
+
+    // function updateProfilePicture() {
+    //     var fileInput = document.getElementById('profilePicture');
+    //     var file = fileInput.files[0];
+    //     var formData = new FormData();
+    //     formData.append('profilePicture', file);
+    //
+    //     // Setează src-ul imaginii pentru afișarea imediată
+    //     var profilePictureElement = document.getElementById('profile-picture');
+    //     profilePictureElement.src = URL.createObjectURL(file);
+    //
+    //     fetch('/volunteers/profilePicture', {
+    //         method: 'POST',
+    //         body: formData,
+    //         mode:"cors"
+    //     })
+    //         .then(response => {
+    //             if (!response.ok) {
+    //                 throw new Error('Failed to update profile picture');
+    //             }
+    //             return response.json();
+    //         })
+    //         .then(data => {
+    //             console.log('Profile picture updated successfully:', data);
+    //             // Intârzie redirecționarea cu 5 secunde pentru a afișa mesajul de succes
+    //             setTimeout(function() {
+    //                 window.location.href = '/volunteers/profile'; // Redirecționează către pagina de home
+    //             }, 5000); // 5000 milisecunde = 5 secunde
+    //         })
+    //         .catch(error => {
+    //             console.error('Error updating profile picture:', error);
+    //             validateForm();
+    //         });
+    // }
+
+
+</script>
+
+</body>
+</html>

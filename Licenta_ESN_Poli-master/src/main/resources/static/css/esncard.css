@@ -1,0 +1,502 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Stilizare globală */
+body {
+    font-family: 'Lato', sans-serif;
+    background: #f0f0f0;
+    overflow-x: hidden; /* Previne apariția barelor de derulare orizontale */
+}
+
+/* Stilizare antet */
+header {
+    background-color: white;
+    color: black;
+    padding: 10px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Umbra pentru antet */
+}
+
+/* Stilizare secțiuni principale */
+main {
+    max-width: 1200px;
+    margin: 80px auto;
+    padding: 20px; /* Ajustează padding-ul pentru a asigura o distanță între conținut și marginea imaginii de fundal */
+    background-color: white;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Umbra pentru secțiunea principală */
+}
+
+
+/* Stiluri pentru secțiunea de ESNcard-uri */
+.esn-card-types {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.card {
+    width: 300px;
+    margin-bottom: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.card img {
+    max-width: 100%;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.card p {
+    margin-bottom: 10px;
+}
+
+.card button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.card button:hover {
+    background-color: #0056b3;
+}
+
+/* Stiluri pentru formularul de plată cu cardul */
+#payment-form {
+    display: block;
+    margin: 50px auto;
+    max-width: 500px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#payment-form h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#card-form .form-group {
+    margin-bottom: 20px;
+}
+
+#card-form .form-label {
+    font-weight: bold;
+}
+
+#card-form .form-control {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#card-form button {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #28a745;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+}
+
+#card-form button:hover {
+    background-color: #218838;
+}
+
+
+
+
+
+
+
+nav {
+    transition: top 0.3s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white; /* Schimbare culorii de fundal a barei de navigare */
+    padding: 0 20px; /* Adăugare padding pentru a mări zona clicabilă și pentru a face background-ul să acopere întreaga înălțime */
+
+}
+.fixed-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; /* Asigurați-vă că bara de navigare este întotdeauna deasupra altor elemente */
+    background-color: white; /* Ajustați culoarea de fundal a barei de navigare când este fixată */
+    padding:  0 20px; /* Adăugați padding pentru a menține dimensiunea barei de navigare */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adăugați umbra pentru a evidenția bara de navigare */
+}
+
+
+
+/* Stilizare link-uri */
+nav ul {
+    list-style: none;
+    display: flex;
+}
+
+nav ul li {
+    margin-right: 20px;
+}
+
+nav ul li:last-child {
+    margin-right: 0;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+    transition: background-color 0.3s; /* Adăugăm o tranziție pentru schimbarea culorii de fundal */
+    padding: 15px 30px; /* Ajustare spațiului dintre text și margini */
+    border-radius: 5px; /* Rotunjirea marginilor */
+}
+
+/* Stilizare link-uri hover */
+nav ul li a:hover {
+    background-color: #00aeef; /* Schimbăm culoarea fundalului la hover */
+}
+
+/* Stilizare link-uri active */
+nav ul li a:active {
+    background-color: red; /* Schimbăm culoarea fundalului când este activ (apasat) */
+}
+
+.logo img {
+    height: 70px;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center; /* Aliniați elementele pe axa verticală (vertical centering) */
+    margin-left: auto; /* Adu user profile în dreapta */
+    padding: 3px;
+}
+
+.user-profile img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px; /* Reducem marginea pentru a crea spațiul între imagine și nume */
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.3); /* Umbra pentru imaginea de profil */
+}
+
+
+.user-profile span {
+    font-size: 16px; /* Dimensiunea fontului pentru numele utilizatorului */
+}
+
+
+
+.nav-links {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.nav-links li {
+    margin-left: 20px;
+}
+
+.nav-links li:first-child {
+    margin-left: 0;
+}
+
+.nav-links ul li {
+    position: relative;
+    cursor: pointer;
+}
+
+.nav-links ul li:hover .dropdown-content {
+    visibility: visible;
+    opacity: 1;
+}
+
+.dropdown-content {
+    /* Alte stiluri existente */
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    top: calc(100% + 10px); /* Poziționăm meniul dropdown la o distanță de 30px sub link */
+    left: 0;
+    width: 100%; /* Acoperim întreaga lățime a link-ului principal */
+    background-color: #fff;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 10px;
+    transition: visibility 0s, opacity 0.3s ease;
+    display: flex;
+    flex-direction: column; /* Așezăm elementele în coloană */
+    align-items: center; /* Aliniere pe mijloc */
+}
+
+
+.dropdown-content a {
+    /* Alte stiluri existente */
+    color: #000;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    text-align: center; /* Aliniere pe mijloc */
+}
+
+.dropdown-content a:hover {
+    background-color: #f2f2f2;
+}
+
+ul {
+    list-style: none;
+    display: flex;
+    align-items: center; /* Aliniază vertical butoanele și profilul utilizatorului */
+}
+
+li {
+    margin-right: 20px;
+}
+
+li:last-child {
+    margin-right: 0;
+}
+
+video {
+    position: fixed; /* Poziționăm videoclipul fixat în colțul din stânga sus al ecranului */
+    top: 0;
+    left: 0;
+    min-width: 100%; /* Asigurăm că videoclipul acoperă întreaga lățime a ecranului */
+    min-height: 100%; /* Asigurăm că videoclipul acoperă întreaga înălțime a ecranului */
+    width: auto; /* În cazul în care lățimea este mai mică decât înălțimea, videoclipul se va redimensiona corect */
+    height: auto; /* În cazul în care înălțimea este mai mică decât lățimea, videoclipul se va redimensiona corect */
+    object-fit: cover; /* Asigură că videoclipul se va întinde pentru a acoperi întreaga zonă a ecranului */
+    z-index: -1; /* Plasăm videoclipul în spatele tuturor celorlalte elemente */
+    opacity: 0.7; /* Opacitate redusă pentru a permite vizualizarea conținutului din spate */
+}
+
+
+
+.esn-card {
+    margin-top: 20px;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+}
+
+/* Stilizare subsol */
+footer {
+    background-color: white;
+    color: black;
+    text-align: center;
+    padding: 10px 0;
+    box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.1); /* Umbra pentru subsol */
+    width: 100%; /* Asigură o lățime de 100% pentru footer */
+}
+
+
+
+.footer-links a {
+    color: black;
+    text-decoration: none;
+    margin-right: 10px;
+}
+
+.footer-links a:last-child {
+    margin-right: 0;
+}
+
+
+/* Media query pentru dispozitive de dimensiuni mici */
+@media only screen and (max-width: 600px) {
+    /* Stiluri pentru ecrane mici */
+
+    nav {
+        flex-direction: column; /* Schimbăm direcția elementelor în coloană */
+        align-items: stretch; /* Asezăm elementele pe întreaga lățime */
+    }
+
+    nav ul li {
+        margin: 10px 0; /* Spațiu între fiecare element din meniu */
+    }
+
+    .user-profile {
+        margin-left: 0; /* Eliminăm margin-left pentru a centra profilul utilizatorului */
+        margin-top: 10px; /* Adăugăm un spațiu între meniu și profilul utilizatorului */
+    }
+
+    .nav-links {
+        display: none; /* Ascundem link-urile de navigare */
+    }
+
+    .popup-content {
+        width: 90%; /* Lățimea pop-up-ului pe ecrane mici */
+    }
+
+    /* Restul stilurilor pentru ecrane mici */
+}
+
+
+
+/* Stiluri pentru butonul de tip hamburger */
+.menu-toggle {
+    display: none; /* Butonul de tip hamburger este ascuns pe ecranele mai mari */
+    cursor: pointer;
+    font-size: 1.5rem; /* Dimensiunea iconiței */
+    color: black; /* Culoarea iconiței */
+    position: absolute;
+    top: 50%;
+    right: 2rem; /* Ajustează poziția butonului în raport cu bara de navigare */
+    transform: translateY(-50%);
+    z-index: 1000;
+}
+
+
+.menu-toggle i {
+    transition: transform 0.3s ease; /* Efect de tranziție pentru iconița butonului */
+}
+
+/* Rotirea iconiței butonului de tip hamburger când meniul este deschis */
+.nav-links.active .menu-toggle i {
+    transform: rotate(90deg);
+}
+
+/* Stiluri pentru meniul de navigare pe ecranele mai mici */
+@media screen and (max-width: 768px) {
+    .menu-toggle {
+        display: block; /* Afișează butonul de tip hamburger pe ecranele mai mici */
+    }
+
+    .nav-links {
+        display: none; /* Meniul de navigare este ascuns inițial pe ecranele mai mici */
+        position: absolute;
+        top: 100%; /* Plasează meniul sub iconița hamburger */
+        left: 0;
+        width: 100%; /* Asigură că meniul ocupă întreaga lățime */
+        background-color: white; /* Culorile de fundal și text */
+        padding: 20px; /* Adaugă spațiere între elementele meniului */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adaugă umbra */
+        z-index: 999; /* Asigură afișarea meniului peste tot */
+        text-align: center; /* Centrează textul */
+    }
+
+    .nav-links.active {
+        display: block; /* Afișează meniul de navigare când este activat */
+    }
+
+    .nav-links ul {
+        list-style: none; /* Elimină marcatorul de listă */
+        padding: 0;
+        margin: 0;
+        flex-direction: column; /* Schimbă direcția elementelor în coloană */
+    }
+
+    .nav-links ul li {
+        text-align: center;
+        margin-bottom: 10px;
+        position: relative;
+    }
+
+    .nav-links ul li a {
+        display: flex; /* Utilizează display flex pentru a alinia elementele pe mijloc */
+        justify-content: center; /* Aliniază elementele pe orizontală pe mijloc */
+        align-items: center; /* Aliniază elementele pe verticală pe mijloc */
+        padding: 10px 0; /* Adaugă spațiere între text și margini */
+        color: black; /* Culoarea textului */
+        font-weight: bold;
+        text-decoration: none; /* Elimină sublinierea */
+        transition: background-color 0.3s; /* Efect de tranziție */
+    }
+
+    .nav-links ul li a:hover {
+        background-color: #00AEEF; /* Schimbă culoarea de fundal la hover */
+    }
+
+    .nav-links ul li:hover .dropdown-content {
+        display: block;
+        position: static; /* Schimbăm poziția submenu-ului la static pentru a îl afișa corect pe ecranele mici */
+        width: 100%; /* Asigurăm că submenu-ul ocupă întreaga lățime */
+        margin-top: 10px; /* Adăugăm un spațiu între elementul părinte și submenu */
+        border-radius: 0; /* Eliminăm orice bordură rotunjită */
+        box-shadow: none; /* Eliminăm umbra */
+    }
+
+    .nav-links ul li:hover .dropdown-content a {
+        display: block;
+        text-align: center; /* Centrăm textul în submenu */
+    }
+
+
+    /* Elimină spațiul între elementele meniului */
+    .nav-links ul li:not(:last-child) {
+        margin-bottom: 0; /* Elimină margin-bottom pentru toate elementele meniului, cu excepția ultimului */
+    }
+
+}
+
+
+
+/* Dropdown Button */
+.dropbtn {
+    background-color: transparent; /* Schimbăm culoarea de fundal la transparent pentru a se potrivi cu restul navigării */
+    color: black;
+    padding: 15px 30px; /* Ajustăm padding-ul pentru a se potrivi cu restul link-urilor din meniu */
+    font-size: 15px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    text-decoration: none; /* Eliminăm sublinierea textului */
+}
+
+/* Dropdown button on hover & focus */
+.dropbtn:hover, .dropbtn:focus {
+    background-color: #f1f1f1; /* Schimbăm culoarea de fundal la hover */
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content1 {
+    display: none;
+    position: absolute;
+    background-color: white; /* Schimbăm culoarea de fundal a dropdown-ului la alb */
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 5px; /* Rotunjim marginile dropdown-ului */
+    top: 100%; /* Aliniem dropdown-ul sub buton */
+    left: -30px; /* Aliniem dropdown-ul la stânga butonului */
+    margin-top: 0px; /* Adăugăm un spațiu între buton și dropdown */
+}
+
+/* Links inside the dropdown */
+.dropdown-content1 a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: center;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content1 a:hover {background-color: #f1f1f1;}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content1 {display: block;}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {background-color: #f1f1f1; /* Schimbăm culoarea de fundal a butonului la hover */}

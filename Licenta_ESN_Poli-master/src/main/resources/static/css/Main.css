@@ -1,0 +1,881 @@
+/* Resetare stilizare implicită */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Stilizare globală */
+body {
+    font-family: 'Lato', sans-serif;
+    background: #f0f0f0;
+    overflow-x: hidden; /* Previne apariția barelor de derulare orizontale */
+}
+
+/* Stilizare antet */
+header {
+    background-color: white;
+    color: black;
+    padding: 10px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Umbra pentru antet */
+}
+
+nav {
+    transition: top 0.3s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white; /* Schimbare culorii de fundal a barei de navigare */
+    padding: 0 20px; /* Adăugare padding pentru a mări zona clicabilă și pentru a face background-ul să acopere întreaga înălțime */
+
+}
+.fixed-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; /* Asigurați-vă că bara de navigare este întotdeauna deasupra altor elemente */
+    background-color: white; /* Ajustați culoarea de fundal a barei de navigare când este fixată */
+    padding:  0 20px; /* Adăugați padding pentru a menține dimensiunea barei de navigare */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adăugați umbra pentru a evidenția bara de navigare */
+}
+
+
+
+/* Stilizare link-uri */
+nav ul {
+    list-style: none;
+    display: flex;
+}
+
+nav ul li {
+    margin-right: 20px;
+}
+
+nav ul li:last-child {
+    margin-right: 0;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+    transition: background-color 0.3s; /* Adăugăm o tranziție pentru schimbarea culorii de fundal */
+    padding: 15px 30px; /* Ajustare spațiului dintre text și margini */
+    border-radius: 5px; /* Rotunjirea marginilor */
+}
+
+/* Stilizare link-uri hover */
+nav ul li a:hover {
+    background-color: #00aeef; /* Schimbăm culoarea fundalului la hover */
+}
+
+/* Stilizare link-uri active */
+nav ul li a:active {
+    background-color: red; /* Schimbăm culoarea fundalului când este activ (apasat) */
+}
+
+.logo img {
+    height: 70px;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center; /* Aliniați elementele pe axa verticală (vertical centering) */
+    margin-left: auto; /* Adu user profile în dreapta */
+    padding: 3px;
+}
+
+.user-profile img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px; /* Reducem marginea pentru a crea spațiul între imagine și nume */
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.3); /* Umbra pentru imaginea de profil */
+}
+
+
+.user-profile span {
+    font-size: 16px; /* Dimensiunea fontului pentru numele utilizatorului */
+}
+
+
+
+.nav-links {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.nav-links li {
+    margin-left: 20px;
+}
+
+.nav-links li:first-child {
+    margin-left: 0;
+}
+
+.nav-links ul li {
+    position: relative;
+    cursor: pointer;
+}
+
+.nav-links ul li:hover .dropdown-content {
+    visibility: visible;
+    opacity: 1;
+}
+
+.dropdown-content {
+    /* Alte stiluri existente */
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    top: calc(100% + 10px); /* Poziționăm meniul dropdown la o distanță de 30px sub link */
+    left: 0;
+    width: 100%; /* Acoperim întreaga lățime a link-ului principal */
+    background-color: #fff;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 10px;
+    transition: visibility 0s, opacity 0.3s ease;
+    display: flex;
+    flex-direction: column; /* Așezăm elementele în coloană */
+    align-items: center; /* Aliniere pe mijloc */
+}
+
+
+.dropdown-content a {
+    /* Alte stiluri existente */
+    color: #000;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    text-align: center; /* Aliniere pe mijloc */
+}
+
+.dropdown-content a:hover {
+    background-color: #f2f2f2;
+}
+
+/* Stiluri pentru pop-up */
+.popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    overflow: auto; /* Adaugăm overflow pentru a permite scroll în pop-up */
+}
+
+.popup-content {
+    position: relative;
+    margin: 100px auto; /* Centrăm pop-up-ul pe ecran */
+    width: 60%;
+    max-width: 500px; /* Limităm lățimea maximă a pop-up-ului */
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: #888;
+}
+
+.close-btn:hover {
+    color: #555;
+}
+
+
+#message {
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+#message.success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+}
+
+#message.error {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+ul {
+    list-style: none;
+    display: flex;
+    align-items: center; /* Aliniază vertical butoanele și profilul utilizatorului */
+}
+
+li {
+    margin-right: 20px;
+}
+
+li:last-child {
+    margin-right: 0;
+}
+
+video {
+    position: fixed; /* Poziționăm videoclipul fixat în colțul din stânga sus al ecranului */
+    top: 0;
+    left: 0;
+    min-width: 100%; /* Asigurăm că videoclipul acoperă întreaga lățime a ecranului */
+    min-height: 100%; /* Asigurăm că videoclipul acoperă întreaga înălțime a ecranului */
+    width: auto; /* În cazul în care lățimea este mai mică decât înălțimea, videoclipul se va redimensiona corect */
+    height: auto; /* În cazul în care înălțimea este mai mică decât lățimea, videoclipul se va redimensiona corect */
+    object-fit: cover; /* Asigură că videoclipul se va întinde pentru a acoperi întreaga zonă a ecranului */
+    z-index: -1; /* Plasăm videoclipul în spatele tuturor celorlalte elemente */
+    opacity: 0.7; /* Opacitate redusă pentru a permite vizualizarea conținutului din spate */
+}
+
+
+
+.esn-card {
+    margin-top: 20px;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+}
+
+/* Stilizare secțiuni principale */
+main {
+    max-width: 1200px;
+    margin: 80px auto;
+    padding: 20px; /* Ajustează padding-ul pentru a asigura o distanță între conținut și marginea imaginii de fundal */
+    background-color: white;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Umbra pentru secțiunea principală */
+}
+
+
+h2 {
+    font-size: 24px;
+}
+
+/* Stilizare subsol */
+footer {
+    background-color: white;
+    color: black;
+    text-align: center;
+    padding: 10px 0;
+    box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.1); /* Umbra pentru subsol */
+    width: 100%; /* Asigură o lățime de 100% pentru footer */
+}
+
+
+
+.footer-links a {
+    color: black;
+    text-decoration: none;
+    margin-right: 10px;
+}
+
+.footer-links a:last-child {
+    margin-right: 0;
+}
+
+/* Dropdown Button */
+.event-cause-dropdown select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.event-cause-dropdown select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+/* Media query pentru dispozitive de dimensiuni mici */
+@media only screen and (max-width: 600px) {
+    /* Stiluri pentru ecrane mici */
+
+    nav {
+        flex-direction: column; /* Schimbăm direcția elementelor în coloană */
+        align-items: stretch; /* Asezăm elementele pe întreaga lățime */
+    }
+
+    nav ul li {
+        margin: 10px 0; /* Spațiu între fiecare element din meniu */
+    }
+
+    .user-profile {
+        margin-left: 0; /* Eliminăm margin-left pentru a centra profilul utilizatorului */
+        margin-top: 10px; /* Adăugăm un spațiu între meniu și profilul utilizatorului */
+    }
+
+    .nav-links {
+        display: none; /* Ascundem link-urile de navigare */
+    }
+
+    .popup-content {
+        width: 90%; /* Lățimea pop-up-ului pe ecrane mici */
+    }
+
+    /* Restul stilurilor pentru ecrane mici */
+}
+
+/* Dropdown Button */
+.event-organizer-dropdown select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.event-organizer-dropdown select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+/* Stilizare pentru eticheta de încărcare a imaginii de fundal */
+.custom-file-upload {
+    display: inline-block;
+    cursor: pointer;
+    padding: 10px 20px;
+    background-color: #F47B20;
+    color: #fff;
+    border-radius: 5px;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.custom-file-upload:hover {
+    background-color: #007bbf;
+}
+
+/* Spatiu intre eticheta de incarcare si restul campurilor */
+label[for="backgroundImage"] {
+    margin-bottom: 20px; /* Adauga un spatiu de 20px intre eticheta de incarcare si celelalte campuri */
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+
+}
+
+.events {
+    margin-top: 20px;
+    overflow: hidden; /* Previne ieșirea conținutului în afara containerului */
+}
+
+.events h2 {
+    margin-bottom: 20px;
+}
+
+.container {
+    width: 100%;
+    height: auto; /* Setează înălțimea automată */
+    overflow-x: auto; /* Permită derularea orizontală doar când este necesar */
+    white-space: nowrap; /* Previne divizarea liniilor */
+}
+
+.slick-carousel {
+    display: flex;
+    padding: 20px 10px; /* Mărește padding-ul în partea de sus și de jos */
+    overflow: hidden; /* Ascunde orice conținut care depășește lățimea disponibilă a caruselului */
+    scroll-snap-type: y mandatory; /* Asigură defilare pe baza elementelor pe verticală */
+    height: auto; /* Setează înălțimea automată */
+}
+
+.slick-carousel .slick-dots {
+    position: static; /* Asigură afișarea bulinelor fără a fi necesar să derulezi */
+    margin-top: 10px; /* Mărește distanța între conținut și buline */
+}
+
+.slick-carousel .slick-prev, .slick-next {
+    font-size: 24px; /* Mărește dimensiunea săgeților */
+    color: black; /* Setează culoarea săgeților */
+    z-index: 1; /* Asigură afișarea săgeților deasupra caruselului */
+}
+
+.slick-carousel .slick-prev {
+    position: absolute; /* Asigură plasarea absolută a săgeții precedente */
+    left: 10px; /* Plasează săgeata precedentă la stânga */
+    top: 50%; /* Plasează săgeata la jumătatea înălțimii secțiunii */
+    transform: translateY(-50%); /* Centrează vertical săgeata */
+}
+
+.slick-carousel .slick-next {
+    position: absolute; /* Asigură plasarea absolută a săgeții următoare */
+    right: 10px; /* Plasează săgeata următoare la dreapta */
+    top: 50%; /* Plasează săgeata la jumătatea înălțimii secțiunii */
+    transform: translateY(-50%); /* Centrează vertical săgeata */
+}
+
+.slick-carousel .slick-prev:before, .slick-next:before {
+    content: '\2039'; /* Utilizează codul HTML pentru săgeata spre stânga */
+}
+
+.slick-carousel .slick-next:before {
+    content: '\203A'; /* Utilizează codul HTML pentru săgeata spre dreapta */
+}
+
+.slick-carousel .slick-prev:hover, .slick-next:hover {
+    color: #555; /* Schimbă culoarea săgeților la hover */
+}
+
+
+
+.event {
+    flex: 0 0 300px; /* Setează lățimea fixă */
+    height: 350px; /* Setează înălțimea fixă a casetei evenimentului */
+    margin-right: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* Previne ieșirea conținutului în afara casetei */
+}
+
+
+.event-description {
+    max-height: 180px; /* Setează înălțimea maximă pentru descrierea evenimentului */
+    overflow: hidden; /* Ascunde textul care depășește containerul */
+}
+
+
+.event-background {
+    height: 200px; /* Ajustați înălțimea după cum doriți */
+    overflow: hidden;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.event-background img {
+    width: 100%;
+    height: auto;
+    display: block; /* Asigură poziționarea corectă a imaginii */
+}
+
+.event-details {
+    padding: 10px;
+
+}
+
+.event-name {
+    font-size: 18px;
+    margin-bottom: 10px;
+    white-space: nowrap; /* Previne divizarea textului pe mai multe linii */
+    overflow: hidden; /* Previne ieșirea conținutului în afara casetei */
+    text-overflow: ellipsis; /* Afișează puncte de suspensie în caz de depășire a lățimii */
+}
+
+.event-icon {
+    margin-right: 5px;
+}
+
+.event-cause {
+    margin-bottom: 5px;
+}
+
+/* Stilurile pentru secțiunea de evenimente trecute */
+.events1 {
+    padding: 50px 0;
+    background-color: #f9f9f9;
+}
+
+/* Stilurile pentru containerul de evenimente trecute */
+.events1 .container1 {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    display: grid; /* Utilizăm CSS Grid pentru a așeza evenimentele */
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Coloane flexibile */
+    gap: 20px; /* Spațiu între elementele grilei */
+}
+
+/* Stilurile pentru fiecare eveniment trecut */
+.events1 .event1 {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* Previne ieșirea conținutului în afara casetei */
+    background-color: white;
+}
+
+/* Stilurile pentru imaginea de fundal a evenimentului trecut */
+.events1 .event-background1 {
+    height: 200px; /* Înălțimea imaginii de fundal */
+    overflow: hidden;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.events1 .event-background1 img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Stilurile pentru detaliile evenimentului trecut */
+.events1 .event-details1 {
+    padding: 20px;
+}
+
+/* Stilurile pentru numele evenimentului trecut */
+.events1 .event-name1 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    white-space: nowrap; /* Previne divizarea textului pe mai multe linii */
+    overflow: hidden; /* Previne ieșirea conținutului în afara casetei */
+    text-overflow: ellipsis; /* Afișează puncte de suspensie în caz de depășire a lățimii */
+}
+
+/* Stilurile pentru mesajul când nu sunt evenimente */
+.events1 .no-events-message {
+    text-align: center;
+    font-size: 30px;
+    color: #666; /* Culorea gri pentru text */
+    margin-top: 20px;
+}
+
+/* Stilurile pentru butonul "Afiseaza mai mult" */
+.load-more-button {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.load-more-button button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff; /* Culorea de fundal a butonului */
+    color: white; /* Culorea textului butonului */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Efect de tranziție la schimbarea culorii */
+}
+
+.load-more-button button:hover {
+    background-color: #0056b3; /* Culorea de fundal a butonului la hover */
+}
+
+
+/*.container1 {*/
+/*    max-width: 1200px;*/
+/*    margin: 0 auto;*/
+/*    padding: 20px;*/
+/*    display: flex;*/
+/*    flex-wrap: wrap;*/
+/*    justify-content: space-between;*/
+/*}*/
+
+
+/*.event1 {*/
+/*    flex: 0 0 calc(33.33% - 20px);*/
+/*    max-width: calc(33.33% - 20px);*/
+/*    height: auto;*/
+/*    margin-bottom: 20px;*/
+/*    border: 1px solid #ddd;*/
+/*    border-radius: 5px;*/
+/*    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);*/
+/*    overflow: hidden;*/
+/*    background-color: white;*/
+/*}*/
+
+
+/*.event-background1 {*/
+/*    height: 200px;*/
+/*    overflow: hidden;*/
+/*    border-top-left-radius: 5px;*/
+/*    border-top-right-radius: 5px;*/
+/*}*/
+
+
+/*.event-background1 img {*/
+/*    width: 100%;*/
+/*    height: auto;*/
+/*    display: block;*/
+/*}*/
+
+/*.event-details1 {*/
+/*    padding: 20px;*/
+/*}*/
+
+/*.event-name1 {*/
+/*    font-size: 18px;*/
+/*    margin-bottom: 10px;*/
+/*    white-space: nowrap;*/
+/*    overflow: hidden;*/
+/*    text-overflow: ellipsis;*/
+/*}*/
+
+
+
+.no-events-message {
+    text-align: center;
+    font-size: 30px;
+    color: #666; /* Culorea gri pentru text */
+    margin-top: 20px;
+}
+
+.events, .events1, .esn-card {
+    padding-bottom: 20px; /* Adaugăm un spațiu între secțiuni */
+}
+
+/* Stilurile pentru secțiunea de evenimente care prezintă evenimentele care au loc astăzi */
+.events-today {
+    margin-top: 20px;
+    overflow: hidden; /* Previne ieșirea conținutului în afara containerului */
+}
+
+/* Stilurile pentru titlul secțiunii */
+.events-today h2 {
+    margin-bottom: 20px;
+}
+
+/* Stilurile pentru containerul de evenimente */
+.events-today .container {
+    display: grid; /* Utilizăm CSS Grid pentru a așeza evenimentele */
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Coloane flexibile */
+    gap: 20px; /* Spațiu între elementele grilei */
+}
+
+/* Stilurile pentru fiecare eveniment */
+.events-today .event {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* Previne ieșirea conținutului în afara casetei */
+    background-color: white;
+}
+
+/* Stilurile pentru imaginea de fundal a evenimentului */
+.events-today .event-background {
+    height: 200px; /* Înălțimea imaginii de fundal */
+    overflow: hidden;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.events-today .event-background img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Stilurile pentru detaliile evenimentului */
+.events-today .event-details {
+    padding: 20px;
+}
+
+/* Stilurile pentru numele evenimentului */
+.events-today .event-name {
+    font-size: 18px;
+    margin-bottom: 10px;
+    white-space: nowrap; /* Previne divizarea textului pe mai multe linii */
+    overflow: hidden; /* Previne ieșirea conținutului în afara casetei */
+    text-overflow: ellipsis; /* Afișează puncte de suspensie în caz de depășire a lățimii */
+}
+
+/* Stilurile pentru iconițele evenimentului */
+.events-today .event-icon {
+    margin-right: 5px;
+}
+
+/* Stilurile pentru mesajul când nu sunt evenimente */
+.events-today .no-events-message {
+    text-align: center;
+    font-size: 30px;
+    color: #666; /* Culorea gri pentru text */
+    margin-top: 20px;
+}
+
+/* Media query pentru dispozitivele cu lățime maximă de 768px */
+@media screen and (max-width: 768px) {
+    .events-today .container {
+        grid-template-columns: repeat(auto-fill, minmax(50%, 1fr)); /* Două coloane */
+    }
+}
+
+/* Media query pentru dispozitivele cu lățime maximă de 480px */
+@media screen and (max-width: 480px) {
+    .events-today .container {
+        grid-template-columns: repeat(auto-fill, minmax(100%, 1fr)); /* O singură coloană */
+    }
+}
+
+
+/* Adăugați alte stiluri pentru detalii, cum ar fi iconițe, etc., după nevoie */
+
+
+/* Stiluri pentru butonul de tip hamburger */
+.menu-toggle {
+    display: none; /* Butonul de tip hamburger este ascuns pe ecranele mai mari */
+    cursor: pointer;
+    font-size: 1.5rem; /* Dimensiunea iconiței */
+    color: black; /* Culoarea iconiței */
+    position: absolute;
+    top: 50%;
+    right: 2rem; /* Ajustează poziția butonului în raport cu bara de navigare */
+    transform: translateY(-50%);
+    z-index: 1000;
+}
+
+
+.menu-toggle i {
+    transition: transform 0.3s ease; /* Efect de tranziție pentru iconița butonului */
+}
+
+/* Rotirea iconiței butonului de tip hamburger când meniul este deschis */
+.nav-links.active .menu-toggle i {
+    transform: rotate(90deg);
+}
+
+/* Stiluri pentru meniul de navigare pe ecranele mai mici */
+@media screen and (max-width: 768px) {
+    .menu-toggle {
+        display: block; /* Afișează butonul de tip hamburger pe ecranele mai mici */
+    }
+
+    .nav-links {
+        display: none; /* Meniul de navigare este ascuns inițial pe ecranele mai mici */
+        position: absolute;
+        top: 100%; /* Plasează meniul sub iconița hamburger */
+        left: 0;
+        width: 100%; /* Asigură că meniul ocupă întreaga lățime */
+        background-color: white; /* Culorile de fundal și text */
+        padding: 20px; /* Adaugă spațiere între elementele meniului */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adaugă umbra */
+        z-index: 999; /* Asigură afișarea meniului peste tot */
+        text-align: center; /* Centrează textul */
+    }
+
+    .nav-links.active {
+        display: block; /* Afișează meniul de navigare când este activat */
+    }
+
+    .nav-links ul {
+        list-style: none; /* Elimină marcatorul de listă */
+        padding: 0;
+        margin: 0;
+        flex-direction: column; /* Schimbă direcția elementelor în coloană */
+    }
+
+    .nav-links ul li {
+        text-align: center;
+        margin-bottom: 10px;
+        position: relative;
+    }
+
+    .nav-links ul li a {
+        display: flex; /* Utilizează display flex pentru a alinia elementele pe mijloc */
+        justify-content: center; /* Aliniază elementele pe orizontală pe mijloc */
+        align-items: center; /* Aliniază elementele pe verticală pe mijloc */
+        padding: 10px 0; /* Adaugă spațiere între text și margini */
+        color: black; /* Culoarea textului */
+        font-weight: bold;
+        text-decoration: none; /* Elimină sublinierea */
+        transition: background-color 0.3s; /* Efect de tranziție */
+    }
+
+    .nav-links ul li a:hover {
+        background-color: #00AEEF; /* Schimbă culoarea de fundal la hover */
+    }
+
+    .nav-links ul li:hover .dropdown-content {
+        display: block;
+        position: static; /* Schimbăm poziția submenu-ului la static pentru a îl afișa corect pe ecranele mici */
+        width: 100%; /* Asigurăm că submenu-ul ocupă întreaga lățime */
+        margin-top: 10px; /* Adăugăm un spațiu între elementul părinte și submenu */
+        border-radius: 0; /* Eliminăm orice bordură rotunjită */
+        box-shadow: none; /* Eliminăm umbra */
+    }
+
+    .nav-links ul li:hover .dropdown-content a {
+        display: block;
+        text-align: center; /* Centrăm textul în submenu */
+    }
+
+
+    /* Elimină spațiul între elementele meniului */
+    .nav-links ul li:not(:last-child) {
+        margin-bottom: 0; /* Elimină margin-bottom pentru toate elementele meniului, cu excepția ultimului */
+    }
+
+}
+
+
+
+/* Dropdown Button */
+.dropbtn {
+    background-color: transparent; /* Schimbăm culoarea de fundal la transparent pentru a se potrivi cu restul navigării */
+    color: black;
+    padding: 15px 30px; /* Ajustăm padding-ul pentru a se potrivi cu restul link-urilor din meniu */
+    font-size: 15px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    text-decoration: none; /* Eliminăm sublinierea textului */
+}
+
+/* Dropdown button on hover & focus */
+.dropbtn:hover, .dropbtn:focus {
+    background-color: #f1f1f1; /* Schimbăm culoarea de fundal la hover */
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content1 {
+    display: none;
+    position: absolute;
+    background-color: white; /* Schimbăm culoarea de fundal a dropdown-ului la alb */
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 5px; /* Rotunjim marginile dropdown-ului */
+    top: 100%; /* Aliniem dropdown-ul sub buton */
+    left: -30px; /* Aliniem dropdown-ul la stânga butonului */
+    margin-top: 0px; /* Adăugăm un spațiu între buton și dropdown */
+}
+
+/* Links inside the dropdown */
+.dropdown-content1 a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: center;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content1 a:hover {background-color: #f1f1f1;}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content1 {display: block;}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {background-color: #f1f1f1; /* Schimbăm culoarea de fundal a butonului la hover */}
+
+
+
+
+
+/* Adăugați alte stiluri pentru detalii, cum ar fi iconițe, etc., după nevoie */
+
+
+

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/events_page.css">
+    <style>
+    </style>
+</head>
+<body>
+<!-- Bara de căutare și sortare -->
+<div class="search-sort-container">
+    <div class="search-container">
+        <input type="text" class="search-bar" placeholder="Search...">
+        <button type="submit"><i class="fa fa-search"></i></button>
+    </div>
+    <div class="sort-options">
+        <label for="sort-select">Sort by:</label>
+        <select id="sort-select">
+            <option value="recent">Most Recent</option>
+            <option value="cause">Cause</option>
+            <option value="date">Date</option>
+        </select>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Iterăm prin lista de evenimente și afișăm detaliile acestora -->
+    <div th:each="event : ${events.content}" class="event">
+        <div class="event-background">
+            <!-- Verificăm dacă evenimentul are o imagine de fundal -->
+            <img th:if="${event.backgroundImage != null}"
+                 th:src="@{'/events/background-image?id=' + ${event.id}}"
+                 alt="Event Background">
+
+            <!-- Dacă evenimentul nu are o imagine de fundal, afișăm imaginea implicită -->
+            <img th:unless="${event.backgroundImage != null}"
+                 src="/static/css/image/event.png"
+                 alt="Default Event Background">
+        </div>
+
+        <div class="event-details">
+            <h2 class="event-name"><i class="fas fa-calendar-alt"></i> <span th:text="${event.eventName}"></span></h2>
+            <p><i class="fas fa-calendar event-icon"></i><span class="event-date" th:text="${#dates.format(event.eventDate, 'dd-MM-yyyy')}"></span></p>
+            <p><i class="fas fa-map-marker-alt event-icon"></i>  <span th:text="${event.eventLocation}"></span></p>
+            <p class="event-cause"><i class="fas fa-hand-holding-heart event-icon"></i><span th:text="${event.eventCause}"></span></p>
+            <p><i class="fas fa-users event-icon"></i><span th:text="${event.eventParticipants}"></span></p>
+            <p><i class="fas fa-file-alt event-icon"></i> <span th:text="${event.eventDescription}"></span></p>
+            <p><i class="fas fa-bullseye event-icon"></i> <span th:text="${event.eventGoal}"></span></p>
+        </div>
+        <div class="event-button">
+
+            <button th:if="${session.loggedInUsername != null}"
+                    th:data-logged-in-user-id="${session.loggedInUserId}"
+                    th:data-event-id="${event.id}"
+                    th:class="${event.joined ? 'joined-button' : 'btn-join'}"
+                    th:text="${event.joined ? 'Joined' : 'Join'}"
+                    th:disabled="${event.joined}"
+                    onclick="joinEvent(this)">
+                <!-- Textul butonului va fi actualizat în funcție de starea de 'joined' a evenimentului -->
+            </button>
+
+
+            <a th:href="@{'/events/event_details?eventId=' + ${event.id}}" class="btn-details">Details</a>
+        </div>
+    </div>
+
+</div>
+
+
+<ul class="pagination">
+    <!-- Buton pentru Pagina Anterioară -->
+    <li th:class="${currentPage == 0 || !events.hasPrevious() ? 'disabled' : ''}">
+        <a th:if="${events.hasPrevious()}" th:href="@{'/events/events_page?pageIndex=' + ${PreviousPageIndex}}">&laquo; Previous</a>
+    </li>
+
+    <!-- Buton pentru Prima Pagină -->
+    <li th:if="${currentPage > 0}">
+        <a th:href="@{'/events/events_page?pageIndex=0'}">1</a>
+    </li>
+
+    <!-- Adăugăm puncte de suspensie dacă există mai multe pagini între Prima Pagină și Pagina Curentă - 1 -->
+    <li th:if="${currentPage > 2}">
+        <span>...</span>
+    </li>
+
+    <!-- Buton pentru Pagina Anterioară de la Pagina Curentă - 1 -->
+    <li th:if="${currentPage > 0 && currentPage != 1}">
+        <a th:href="@{'/events/events_page?pageIndex=' + ${currentPage - 1}}" th:text="${currentPage}"></a>
+    </li>
+
+    <!-- Buton pentru Pagina Curentă -->
+    <li class="active">
+        <span th:text="${currentPage + 1}"></span>
+    </li>
+
+    <!-- Buton pentru Pagina Următoare de la Pagina Curentă + 1 -->
+    <li th:if="${currentPage < totalPages - 1}">
+        <a th:href="@{'/events/events_page?pageIndex=' + ${currentPage + 1}}" th:text="${currentPage + 2}"></a>
+    </li>
+
+    <!-- Adăugăm puncte de suspensie dacă există mai multe pagini între Pagina Curentă + 1 și Ultima Pagină -->
+    <li th:if="${currentPage < totalPages - 3}">
+        <span>...</span>
+    </li>
+
+    <!-- Buton pentru Ultima Pagină -->
+    <li th:if="${currentPage < totalPages - 1 && currentPage != totalPages - 2}">
+        <a th:href="@{'/events/events_page?pageIndex=' + ${totalPages - 1}}" th:text="${totalPages}"></a>
+    </li>
+
+    <!-- Buton pentru Pagina Următoare -->
+    <li th:class="${events.last || !events.hasNext() ? 'disabled' : ''}">
+        <a th:if="${!events.last}" th:href="@{'/events/events_page?pageIndex=' + ${nextPageIndex}}">Next &raquo;</a>
+    </li>
+</ul>
+
+
+
+
+
+
+
+<!-- Script pentru funcționalitatea căutării și sortării -->
+<script>
+    // JavaScript pentru funcționalitatea căutării
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.querySelector('.search-container input[type="text"]');
+        const events = document.querySelectorAll('.event');
+
+        searchInput.addEventListener('input', function () {
+            const searchTerm = searchInput.value.trim().toLowerCase();
+
+            events.forEach(function (event) {
+                const eventDetails = event.innerText.toLowerCase();
+                if (eventDetails.includes(searchTerm)) {
+                    event.style.display = 'block';
+                } else {
+                    event.style.display = 'none';
+                }
+            });
+        });
+    });
+
+
+    function joinEvent(button) {
+        const loggedInUserId = button.getAttribute('data-logged-in-user-id');
+        const eventId = button.getAttribute('data-event-id');
+
+        if (!button.classList.contains('joined-button')) {
+            if (loggedInUserId && eventId) {
+                fetch('/events/join-event', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        eventId: eventId,
+                        userId: loggedInUserId
+                    }),
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            button.textContent = 'Joined';
+                            button.disabled = true;
+                            button.classList.add('joined-button');
+                        } else {
+                            console.error('Failed to join event');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            } else {
+                console.error('Invalid data attributes');
+            }
+        }
+    }
+
+    // JavaScript pentru sortare
+    document.addEventListener('DOMContentLoaded', function () {
+        const sortSelect = document.getElementById('sort-select');
+        const eventsContainer = document.querySelector('.container');
+
+        sortSelect.addEventListener('change', function () {
+            const selectedOption = sortSelect.value;
+            const events = Array.from(eventsContainer.querySelectorAll('.event'));
+
+            console.log("Option selected:", selectedOption); // Afișează opțiunea de sortare selectată
+
+            events.sort(function (a, b) {
+                let aValue, bValue;
+
+                switch (selectedOption) {
+                    case 'recent':
+                        aValue = new Date(a.querySelector('.event-date').innerText);
+                        bValue = new Date(b.querySelector('.event-date').innerText);
+                        console.log("aValue:", aValue, "bValue:", bValue); // Afișează valorile pentru sortarea după dată
+                        return bValue - aValue;
+                    case 'cause':
+                        aValue = a.querySelector('.event-cause').innerText.toLowerCase();
+                        bValue = b.querySelector('.event-cause').innerText.toLowerCase();
+                        console.log("aValue:", aValue, "bValue:", bValue); // Afișează valorile pentru sortarea după cauză
+                        return aValue.localeCompare(bValue);
+                    case 'date':
+                        aValue = new Date(a.querySelector('.event-date').innerText);
+                        bValue = new Date(b.querySelector('.event-date').innerText);
+                        console.log("aValue:", aValue, "bValue:", bValue); // Afișează valorile pentru sortarea după dată
+                        return aValue - bValue;
+                    default:
+                        return 0;
+                }
+            });
+
+            events.forEach(function (event) {
+                eventsContainer.appendChild(event);
+            });
+        });
+    });
+
+</script>
+
+</body>
+</html>
